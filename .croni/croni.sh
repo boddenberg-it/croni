@@ -1,5 +1,4 @@
 #!/bin/bash
-new_crontab=/tmp/croni
 
 function log() {
 	echo "$1" >> "$base/../croni.log"
@@ -15,10 +14,12 @@ function deploy_job() {
 }
 
 function deploy() {
-	echo "# $base #"
+
+	old_crontab="$HOME/.croni"
+	new_crontab="$HOME/.croni_new"
 
 	rm "$new_crontab" || true
-	echo "0 5,17 * * * $submodule_base/croni.sh deploy $1 $2" >> $new_crontab
+	echo "0 5,17 * * * $submodule_base/croni.sh deploy" >> $new_crontab
 
 	projects="$(ls "$base")"
 	for project in $projects; do
@@ -28,11 +29,19 @@ function deploy() {
 		done
 	done
 
-	# TODO:
-	#replace crontab file
+	diff="$(diff "$old_crontab" "$new_crontab")"
+
+	if [ $? -gt 0 ]; then
+		log "Folloging changing have been applied:"
+		log "$diff"
+		log "[end of changes]"
+	else
+		log "Nothing changed, nothing added."
+	fi
+
+	cp "$new_crontab" "$old_crontab"
 }
 
-################
 function run() {
 	project="$1"
 	job="$2"
@@ -73,13 +82,10 @@ function run() {
 }
 
 function update() {
-
 	exits=0
-
 	cd $base || exits=$((exits+$?))
 	git fetch origin; exits=$((exits+$?))
 	git rebase origin/master; exits=$((exits+$?))
-
 	deploy; exits=$((exits+$?))
 
 	if [ "$exits" -gt 0 ]; then
