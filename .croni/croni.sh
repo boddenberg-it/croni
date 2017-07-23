@@ -1,13 +1,18 @@
 #!/bin/bash
 
 function log() {
-	echo "[$(date)] $1" >> "$base/../croni.log"
+	echo "[$(date)] $1" >> "$base/../logs/croni.log"
 }
 
 function deploy_job() {
-	echo "$base/  $1/  $2"
 	croni="$(cat "$base/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
-	echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
+	if [ "$croni" = "" ]; then
+		log "[ERROR] No croni variable declared in $base/$2/$3"
+		echo "# $croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
+	else
+		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
+	fi
+
 	job_logs="$base/../logs/$1/$2"
 	job_logs="${job_logs//.sh/}"
 	mkdir -p "$job_logs"
@@ -18,8 +23,10 @@ function deploy() {
 	old_crontab="$HOME/.croni"
 	new_crontab="$HOME/.croni_new"
 
-	rm "$new_crontab" || true
-	echo "0 5,17 * * * $submodule_base/croni.sh deploy" >> $new_crontab
+	echo "" > $new_crontab
+	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" >> $new_crontab
+	echo "0 5,17 * * * $submodule_base/croni.sh update" >> $new_crontab
+	echo "" >> $new_crontab
 
 	projects="$(ls "$base")"
 	for project in $projects; do
@@ -32,11 +39,9 @@ function deploy() {
 	diff="$(diff "$old_crontab" "$new_crontab")"
 
 	if [ $? -gt 0 ]; then
-		log "deploy(): Folloging changing have been applied:"
-		log "$diff"
-		log "[end of changes]"
+		log "deploy\(\): Folloging changing have been applied: $diff [end of changes]"
 	else
-		log "deploy(): Nothing changed, nothing added."
+		log "deploy\(\): Nothing changed, nothing added."
 	fi
 
 	cp "$new_crontab" "$old_crontab"
@@ -84,6 +89,7 @@ function run() {
 		log "Failure  build: $1/$2 number: $next_bn duration: $duration"
 		echo "[INFO] Failure" >> "$job_log"
 		mv "$job_log" "${job_log}_failed_${duration}.log"
+
 	else
 		log "Success  build: $1/$2 number: $next_bn duration: $duration"
 		echo "[INFO] Success" >> "$job_log"
