@@ -41,11 +41,11 @@ And run:
 
 Afterwards, croni will fetch the repo twice a day and deploy changes e.g. add/update/delete new/old jobs in the crontab,
 which is placed in ~/.croni.
-Furthermore, one can open the bootstrap frontend locally with a browser e.g.: 
+Furthermore, one can open the bootstrap frontend locally with a browser e.g.:
 
 "firefox .croni/webroot/index.html"
 
-or remotely by symlinking e.g. "/var/wwwl/html/croni" to .croni/webroot to access logs and the statuses of your cronjobs. 
+or remotely by symlinking e.g. "/var/wwwl/html/croni" to .croni/webroot to access logs and the statuses of your cronjobs.
 
 The default fetch value can be overridden by placing a croni.cfg file holding following content:
 
