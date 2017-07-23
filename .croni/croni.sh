@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function log() {
-	echo "$1" >> "$base/../croni.log"
+	echo "[$(date)] $1" >> "$base/../croni.log"
 }
 
 function deploy_job() {
@@ -32,14 +32,24 @@ function deploy() {
 	diff="$(diff "$old_crontab" "$new_crontab")"
 
 	if [ $? -gt 0 ]; then
-		log "Folloging changing have been applied:"
+		log "deploy(): Folloging changing have been applied:"
 		log "$diff"
 		log "[end of changes]"
 	else
-		log "Nothing changed, nothing added."
+		log "deploy(): Nothing changed, nothing added."
 	fi
 
 	cp "$new_crontab" "$old_crontab"
+}
+
+function initialise() {
+	sudo cp "/var/spool/cron/crontabs/$USER" "$HOME/crontab.bak"
+	chown $USER:$USER "$HOME/crontab.bak"
+
+	touch "$HOME/.croni"
+	sudo ln -s "$HOME/.croni" "/var/spool/cron/crontabs/$USER"
+
+	deploy
 }
 
 function run() {
