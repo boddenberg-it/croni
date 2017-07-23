@@ -1,0 +1,55 @@
+Croni is a cron helper to easily maintain and share cronjobs used for CI puproses by holding them in a git repository.
+Furthermore a simple front-end is provided to visualise jobs and their status as well as some basic statitics to keep track.
+
+Note: One should not manually add/change/delete cronjobs via "crontab -e" as croni will override any changes. Although "crontab -e" can be used to verify proper functioning of croni.
+
+To setup croni you need to create a git repository holding projects (folders) and project specific scripts (in those folders):
+
+-.git
+-.gitignore
+-awesome_project
+  --foo.sh
+  --bar.sh
+-another_project
+  --another_foobar.sh
+
+Note: one should add "/logs" to the .gitignore file.
+
+All scripts must declare the "croni" variable, which holds the cron expression e.g. "* * * * *":
+
+croni="* * * * *" # run every minute
+
+
+Optionally, one can also declare following variables:
+
+timeout="180" # timeout in seconds
+reason_x1="" #
+reason_x2="" #
+...
+
+Note: reason_x{1,2,3...} is used to provide a reason for a specific error code {1;255} in frontend and logs.
+
+
+
+Then you need to add the croni repository as a submodule:
+
+command to do so
+
+And run:
+
+ ./.croni.sh initialise
+
+Afterwards, croni will fetch the repo twice a day and deploy changes e.g. add/update/delete new/old jobs in the crontab,
+which is placed in ~/.croni.
+Furthermore, one can open the bootstrap frontend locally with a browser e.g.: 
+
+"firefox .croni/webroot/index.html"
+
+or remotely by symlinking e.g. "/var/wwwl/html/croni" to .croni/webroot to access logs and the statuses of your cronjobs. 
+
+The default fetch value can be overridden by placing a croni.cfg file holding following content:
+
+fetch_interval="* * * * "
+global_timeout="1800"
+log_rotation_max_days="30"
+log_rotation_max_builds="14"
