@@ -63,7 +63,7 @@ function deploy() {
 
 function deploy_job() {
 
-	croni="$(cat "$base/croni_jos/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
+	croni="$(cat "$base/croni_jobs/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
 
 	if [ "$croni" = "" ]; then
 		log "[ERROR] No croni variable declared in $base/croni_jobs/$1/$2"
