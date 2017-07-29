@@ -22,7 +22,7 @@ function init() {
 		ln -s croni/webroot/index.html croni.html
 	fi
 
-	if [ ! -f "croni.html" ]; then
+	if [ ! -f "croni.sh" ]; then
 		ln -s croni/croni.sh croni.sh
 	fi
 
