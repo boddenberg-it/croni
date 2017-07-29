@@ -96,7 +96,11 @@ function run() {
 
 	date="$(date +%y-%m-%w_%H:%m:%S)"
 	log "Starting build: $project/$job number: $next_bn"
-	job_log="$job_dir/${job}_${date}_${next_bn}.log"
+	job_log="$job_dir/${job}_${next_bn}_${date}.log"
+
+	# create workspace and use it for build
+	mkdir -p "$job_dir/workspaces/${next_bn}/"
+	cd "$job_dir/workspaces/${next_bn}/" || exit
 
 	start=$(date +%s)
 	"$base/$project/$job" 2&>1 > "$job_log"
