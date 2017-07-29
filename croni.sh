@@ -98,12 +98,10 @@ function run() {
 	job_log="$job_dir/${job}_${date}_${next_bn}.log"
 
 	start=$(date +%s)
-	/bin/sh -ex "$base/$project/$job" 2&>1 > "$job_log"
+	"$base/$project/$job" 2&>1 > "$job_log"
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
-
-	echo "" >> $job_log
 	echo "[INFO] Build took: $duration s" >> "$job_log"
 
 	if [ "$exit_code" -gt 0 ]; then
@@ -152,8 +150,9 @@ function update() {
 
 	new_head="$(revision)"
 
-	if []
-	deploy
+	if [ "$new_head" != "$old_head" ]; then
+		deploy
+	fi
 }
 
 submodule_base="$(dirname "$(readlink -f $0)")"
