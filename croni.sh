@@ -18,8 +18,8 @@ function init() {
 		sudo ln -s "$HOME/.croni" "/var/spool/cron/crontabs/$USER"
 	fi
 
-	if [ ! -f "croni.html" ]; then
-		ln -s croni/webroot/index.html croni.html
+	if [ ! -f "index.html" ]; then
+		ln -s croni/webroot/index.html index.html
 	fi
 
 	if [ ! -f "croni.sh" ]; then
@@ -42,9 +42,9 @@ function deploy() {
 	echo "0 5,17 * * * $submodule_base/croni.sh update" >> $new_crontab
 	echo "" >> $new_crontab
 
-	projects="$(ls "$base")"
+	projects="$(ls "$base/croni_jobs")"
 	for project in $projects; do
-		jobs="$(ls "$base/$project")"
+		jobs="$(ls "$base/croni_jobs/$project")"
 		for job in $jobs; do
 			deploy_job "$project" "$job"
 		done
@@ -63,11 +63,11 @@ function deploy() {
 
 function deploy_job() {
 
-	croni="$(cat "$base/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
+	croni="$(cat "$base/croni_jos/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
 
 	if [ "$croni" = "" ]; then
-		log "[ERROR] No croni variable declared in $base/$2/$3"
-		echo "# $croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
+		log "[ERROR] No croni variable declared in $base/croni_jobs/$1/$2"
+		echo "# $croni $submodule_base/croni.sh run $1 $2 -- FAILED" >> $new_crontab
 	else
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
