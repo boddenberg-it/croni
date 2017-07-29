@@ -54,11 +54,11 @@ function deploy() {
 
 	if [ $? -gt 0 ]; then
 		log "deploy call: Folloging changing have been applied: $diff [end of changes]"
+		cp "$new_crontab" "$old_crontab"
+		/etc/init.d/cron reload
 	else
 		log "deploy call: Nothing changed, nothing added."
 	fi
-
-	cp "$new_crontab" "$old_crontab"
 }
 
 function deploy_job() {
@@ -82,12 +82,13 @@ function run() {
 	project="$1"
 	job="$2"
 
-	job_dir="$base/../logs/$project/$job"
+	job_dir="$base/croni_logs/$project/$job"
 	job_dir="${job_dir//.sh/}"
 
 	if [ ! -f "$job_dir/latest_build_number" ]; then
 		echo "-1" > "$job_dir/latest_build_number"
 	fi
+
 
 	current_bn="$(cat $job_dir/latest_build_number)"
 	next_bn="$((current_bn+1))"
