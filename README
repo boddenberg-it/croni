@@ -1,3 +1,5 @@
+NOTE: This project is not even alpha! :)
+
 Croni is a cron helper to easily maintain and share cronjobs used for CI puproses by holding them in a git repository.
 Furthermore a simple front-end is provided to visualise jobs and their status as well as some basic statitics to keep track.
 
