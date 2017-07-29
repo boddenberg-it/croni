@@ -156,6 +156,6 @@ function update() {
 }
 
 submodule_base="$(dirname "$(readlink -f $0)")"
-base="${submodule_base}/../"
+base="${submodule_base:0:-5}"
 export base submodule_base
 $@
