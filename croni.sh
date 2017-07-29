@@ -72,7 +72,7 @@ function deploy_job() {
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
 
-	job_logs="$base/cron_logs/$1/$2"
+	job_logs="$base/croni_logs/$1/$2"
 	job_logs="${job_logs//.sh/}"
 	mkdir -p "$job_logs"
 }
