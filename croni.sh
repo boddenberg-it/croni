@@ -103,7 +103,7 @@ function run() {
 	cd "$job_dir/workspaces/${next_bn}/" || exit
 
 	start=$(date +%s)
-	"$base/$project/$job" 2&>1 > "$job_log"
+	"$base/croni_jobs/$project/$job" > "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
