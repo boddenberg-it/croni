@@ -22,11 +22,11 @@ function deploy() {
 
 	mkdir -p $base/croni_logs/
 
-	old_crontab="$HOME/.croni"
-	new_crontab="$HOME/.croni_new"
+	old_crontab="$base/.cronitab"
+	new_crontab="$base/.cronitab_new"
 
-	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" >> $new_crontab
-	echo "0 5,17 * * * $submodule_base/croni.sh update" >> $new_crontab
+	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" > $new_crontab
+	echo "$croni_update_expression $submodule_base/croni.sh update" >> $new_crontab
 	echo "" >> $new_crontab
 
 	projects="$(ls "$base/croni_jobs")"
