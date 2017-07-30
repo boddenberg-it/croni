@@ -123,7 +123,7 @@ function run() {
 			fi
 
 			log "Build failure: $1/$2 number: $next_bn duration: $duration reason: $reason"
-			echo "[INFO] Failure, reason: $reason" >> "$job_log"
+			echo "[INFO] Failure, reason_${exit_code}: $reason" >> "$job_log"
 			mv "$job_log" "${job_log}_${exit_code}_FAILED_${duration}.log"
 		fi
 	# success
