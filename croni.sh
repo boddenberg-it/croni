@@ -93,7 +93,8 @@ function run() {
 
 	echo "[INFO] Build started at $date"
 	start=$(date +%s)
-	"$base/croni_jobs/$project/$job" > "$job_log" 2>&1
+	# exit code is 124 in case of a timeout
+	timeout 1 "$base/croni_jobs/$project/$job" > "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
@@ -101,11 +102,20 @@ function run() {
 	echo "[INFO] Build took: $duration s" >> "$job_log"
 
 	if [ "$exit_code" -gt 0 ]; then
-		log "Failure  build: $1/$2 number: $next_bn duration: $duration"
-		echo "[INFO] Failure" >> "$job_log"
-		mv "$job_log" "${job_log}_FAILED_${duration}.log"
+		# timeout
+		if [ "$exit_code" -eq 124 ]; then
+			log "build timeout: $1/$2 number: $next_bn duration: $duration"
+			echo "[INFO] Timeout" >> "$job_log"
+			mv "$job_log" "${job_log}_TIMEOUT_${duration}.log"
+		# failure
+		else
+			log "Suild failure: $1/$2 number: $next_bn duration: $duration"
+			echo "[INFO] Failure" >> "$job_log"
+			mv "$job_log" "${job_log}_FAILED_${duration}.log"
+		fi
+	# success
 	else
-		log "Success  build: $1/$2 number: $next_bn duration: $duration"
+		log "Build Success: $1/$2 number: $next_bn duration: $duration"
 		echo "[INFO] Success" >> "$job_log"
 		mv "$job_log" "${job_log}_SUCCESS_${duration}.log"
 	fi
