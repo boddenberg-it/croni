@@ -97,7 +97,7 @@ function run() {
 	mkdir -p "$job_dir/workspaces/${next_bn}/"
 	cd "$job_dir/workspaces/${next_bn}/" || exit
 
-	echo "[INFO] Build started at $date"
+	log "[INFO] Build started at $date"
 	script="$base/croni_jobs/$project/$job"
 	start=$(date +%s)
 	# exit code is 124 in case of a timeout
