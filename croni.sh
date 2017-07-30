@@ -25,9 +25,7 @@ function deploy() {
 	old_crontab="$HOME/.croni"
 	new_crontab="$HOME/.croni_new"
 
-	echo "" > $new_crontab
 	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" >> $new_crontab
-	# TODO: load cron expression from croni.cfg
 	echo "0 5,17 * * * $submodule_base/croni.sh update" >> $new_crontab
 	echo "" >> $new_crontab
 
@@ -87,17 +85,19 @@ function run() {
 
 	date="$(date +%y-%m-%w_%H:%m:%S)"
 	log "Starting build: $project/$job number: $next_bn"
-	job_log="$job_dir/${job}_${next_bn}_${date}.log"
+	job_log="$job_dir/${job}_${next_bn}.log"
 
 	# create workspace and use it for build
 	mkdir -p "$job_dir/workspaces/${next_bn}/"
 	cd "$job_dir/workspaces/${next_bn}/" || exit
 
+	echo "[INFO] Build started at $date"
 	start=$(date +%s)
 	"$base/croni_jobs/$project/$job" > "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
+	echo ""
 	echo "[INFO] Build took: $duration s" >> "$job_log"
 
 	if [ "$exit_code" -gt 0 ]; then
