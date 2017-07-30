@@ -50,10 +50,19 @@ function deploy() {
 	fi
 }
 
+function job_value() {
+	job_var="$(cat "$base/croni_jobs/$1/$2" | grep "$3\=" | cut -d "\"" -f2)"
+	if [ "$job_var" = "" ]; then
+		if [ "default_$3" != "" ]; then
+			echo "default_$3"
+		fi
+	else
+		echo "$job_var"
+	fi
+}
+
 function deploy_job() {
-
-	croni="$(cat "$base/croni_jobs/$1/$2" | grep "croni\=" | cut -d "\"" -f2)"
-
+	croni=job_value "$1" "$2" "croni"
 	if [ "$croni" = "" ]; then
 		log "[ERROR] No croni variable declared in $base/croni_jobs/$1/$2"
 		echo "# $croni $submodule_base/croni.sh run $1 $2 -- FAILED" >> $new_crontab
@@ -97,15 +106,16 @@ function run() {
 	mkdir -p "$job_dir/workspaces/${next_bn}/"
 	cd "$job_dir/workspaces/${next_bn}/" || exit
 
-	echo "[INFO] Build started at $date" >> "$job_log"
 	script="$base/croni_jobs/$project/$job"
+	timeout="$(job_value "$project" "$job" "timeout")"
+	echo "[INFO] Build started at $date" >> "$job_log"
 	start=$(date +%s)
 	# exit code is 124 in case of a timeout
-	timeout 1800 "$script" >> "$job_log" 2>&1
+	timeout "$timeout" "$script" >> "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
-	echo ""
+	echo "" >> "$job_log"
 	echo "[INFO] Build took: $duration s" >> "$job_log"
 
 	if [ "$exit_code" -gt 0 ]; then
@@ -121,7 +131,6 @@ function run() {
 			if [ "$parsed_reason" != "" ]; then
 				reason="$parsed_reason"
 			fi
-
 			log "Build failure: $1/$2 number: $next_bn duration: $duration reason: $reason"
 			echo "[INFO] Failure, reason_${exit_code}: $reason" >> "$job_log"
 			mv "$job_log" "${job_log}_${exit_code}_FAILED_${duration}.log"
