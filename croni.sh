@@ -127,7 +127,7 @@ function run() {
 		# failure
 		else
 			reason="unknown"
-			parsed_reason="$(cat $script | grep "reason_${exit_code}\=" | cut -d '"' -f2)"
+			parsed_reason="$(job_value "$project" "$job" "reason_${exit_code}")"
 			if [ "$parsed_reason" != "" ]; then
 				reason="$parsed_reason"
 			fi
