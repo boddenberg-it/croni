@@ -7,6 +7,13 @@ function log() {
 function init() {
 	mkdir -p $base/croni_logs/
 
+	cat <<-EOT >> "$HOME/.croni"
+		# croni instance configuration
+
+		run=false
+		send_mail=false
+	EOT
+
 	if [ ! -f "index.html" ]; then
 		ln -s croni/webroot/index.html index.html
 	fi
