@@ -89,7 +89,7 @@ function run() {
 	next_bn="$((current_bn+1))"
 	echo "$next_bn" > "$job_dir/latest_build_number"
 
-	date="$(date +%y-%m-%w_%H:%m:%S)"
+	date="$(date +%y-%m-%d_%H:%m:%S)"
 	log "Starting build: $project/$job number: $next_bn"
 	job_log="$job_dir/${job}_${next_bn}"
 
@@ -101,7 +101,7 @@ function run() {
 	script="$base/croni_jobs/$project/$job"
 	start=$(date +%s)
 	# exit code is 124 in case of a timeout
-	timeout 1800 "$script" > "$job_log" 2>&1
+	timeout 1800 "$script" >> "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
