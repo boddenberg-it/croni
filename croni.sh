@@ -68,6 +68,12 @@ function deploy_job() {
 
 ### ###
 function run() {
+	# TODO: parse from config
+	state="enabled"
+	if [ $state != "enabled" ]; then
+		exit 0
+	fi
+
 	project="$1"
 	job="$2"
 
@@ -92,9 +98,10 @@ function run() {
 	cd "$job_dir/workspaces/${next_bn}/" || exit
 
 	echo "[INFO] Build started at $date"
+	script="$base/croni_jobs/$project/$job"
 	start=$(date +%s)
 	# exit code is 124 in case of a timeout
-	timeout 1 "$base/croni_jobs/$project/$job" > "$job_log" 2>&1
+	timeout 1800 "$script" > "$job_log" 2>&1
 	exit_code=$?
 	stop=$(date +%s)
 	duration=$((stop-start))
@@ -104,14 +111,20 @@ function run() {
 	if [ "$exit_code" -gt 0 ]; then
 		# timeout
 		if [ "$exit_code" -eq 124 ]; then
-			log "build timeout: $1/$2 number: $next_bn duration: $duration"
+			log "Build timeout: $1/$2 number: $next_bn duration: $duration"
 			echo "[INFO] Timeout" >> "$job_log"
 			mv "$job_log" "${job_log}_TIMEOUT_${duration}.log"
 		# failure
 		else
-			log "Suild failure: $1/$2 number: $next_bn duration: $duration"
-			echo "[INFO] Failure" >> "$job_log"
-			mv "$job_log" "${job_log}_FAILED_${duration}.log"
+			reason="unknown"
+			parsed_reason="$(cat $script | grep "reason_${exit_code}\=" | cut -d '"' -f2)"
+			if [ "$parsed_reason" != "" ]; then
+				reason="$parsed_reason"
+			fi
+
+			log "Build failure: $1/$2 number: $next_bn duration: $duration reason: $reason"
+			echo "[INFO] Failure, reason: $reason" >> "$job_log"
+			mv "$job_log" "${job_log}_${exit_code}_FAILED_${duration}.log"
 		fi
 	# success
 	else
