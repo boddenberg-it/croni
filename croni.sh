@@ -144,6 +144,15 @@ function upgrade() {
 	old_head="$(revision croni)"
 	cd $base || exit
 	git submodule update --remote
+
+	if [ $? -gt 0 ]; then
+		cd $submodule_base || exit
+		git stash
+		git reset HEAD --hard
+		cd $base || exit
+		git submodule update --remote
+	fi
+
 	new_head="$(revision croni)"
 
 	if [ "$old_head" != "$new_head" ]; then
