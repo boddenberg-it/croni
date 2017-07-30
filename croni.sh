@@ -10,8 +10,8 @@ function init() {
 	cat <<-EOT > "$HOME/.croni"
 		# croni instance configuration
 
-		run=false
-		send_mail=false
+		croni_run=false
+		croni_send_mail=false
 	EOT
 
 	if [ ! -f "index.html" ]; then
@@ -89,9 +89,7 @@ function deploy_job() {
 
 ### ###
 function run() {
-	# TODO: parse from config
-	state="enabled"
-	if [ $state != "enabled" ]; then
+	if [ ! $croni_run ]; then
 		exit 0
 	fi
 
@@ -203,15 +201,18 @@ function update() {
 	fi
 }
 
+source_it() {
+	source "$1"
+	if [ $? -gt 0 ]; then
+		log "Error sourcing $1"
+		echo "Error sourcing $1"
+		exit 1
+	fi
+}
+
 submodule_base="$(dirname "$(readlink -f $0)")"
 base="${submodule_base:0:-5}"
 export base submodule_base
-
-source "$base/croni.cfg"
-if [ $? -gt 0 ]; then
-	log "Error sourcing $base/croni.cfg"
-	echo "Error sourcing $base/croni.cfg"
-	exit 1
-fi
-
+source_it "$base/croni.cfg"
+source_it "$HOME/.croni"
 $@
