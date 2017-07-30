@@ -7,7 +7,7 @@ function log() {
 function init() {
 	mkdir -p $base/croni_logs/
 
-	cat <<-EOT >> "$HOME/.croni"
+	cat <<-EOT > "$HOME/.croni"
 		# croni instance configuration
 
 		run=false
@@ -69,7 +69,7 @@ function job_value() {
 }
 
 function deploy_job() {
-	croni=job_value "$1" "$2" "croni"
+	croni="$(job_value "$1" "$2" "croni")"
 	if [ "$croni" = "" ]; then
 		log "[ERROR] No croni variable declared in $base/croni_jobs/$1/$2"
 		echo "# $croni $submodule_base/croni.sh run $1 $2 -- FAILED" >> $new_crontab
