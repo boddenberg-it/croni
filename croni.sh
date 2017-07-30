@@ -5,18 +5,7 @@ function log() {
 }
 
 function init() {
-
 	mkdir -p $base/croni_logs/
-
-	if [ ! -f "$HOME/.croni" ]; then
-		sudo cp "/var/spool/cron/crontabs/$USER" "$HOME/crontab.bak"
-		sudo chown $USER:$USER "$HOME/crontab.bak"
-
-		touch "$HOME/.croni"
-		chmod o-r "$HOME/.croni"
-		sudo rm "/var/spool/cron/crontabs/$USER"
-		sudo ln -s "$HOME/.croni" "/var/spool/cron/crontabs/$USER"
-	fi
 
 	if [ ! -f "index.html" ]; then
 		ln -s croni/webroot/index.html index.html
@@ -50,12 +39,14 @@ function deploy() {
 		done
 	done
 
+	# deploy new crontab if changes have been introduced
 	diff="$(diff "$old_crontab" "$new_crontab")"
-
 	if [ $? -gt 0 ]; then
 		log "deploy call: Folloging changing have been applied: $diff [end of changes]"
 		cp "$new_crontab" "$old_crontab"
+		crontab "$old_crontab"
 		/etc/init.d/cron reload
+		rm "$new_crontab"
 	else
 		log "deploy call: Nothing changed, nothing added."
 	fi
