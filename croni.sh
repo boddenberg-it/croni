@@ -60,7 +60,8 @@ function deploy() {
 function job_value() {
 	job_var="$(cat "$base/croni_jobs/$1/$2" | grep "$3\=" | cut -d "\"" -f2)"
 	if [ "$job_var" = "" ]; then
-		if [ "default_$3" != "" ]; then
+		default="default_$3"
+		if [ "$default" != "" ]; then
 			echo "default_$3"
 		fi
 	else
