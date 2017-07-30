@@ -85,7 +85,7 @@ function run() {
 
 	date="$(date +%y-%m-%w_%H:%m:%S)"
 	log "Starting build: $project/$job number: $next_bn"
-	job_log="$job_dir/${job}_${next_bn}.log"
+	job_log="$job_dir/${job}_${next_bn}"
 
 	# create workspace and use it for build
 	mkdir -p "$job_dir/workspaces/${next_bn}/"
@@ -103,12 +103,11 @@ function run() {
 	if [ "$exit_code" -gt 0 ]; then
 		log "Failure  build: $1/$2 number: $next_bn duration: $duration"
 		echo "[INFO] Failure" >> "$job_log"
-		mv "$job_log" "${job_log}_failed_${duration}.log"
-
+		mv "$job_log" "${job_log}_FAILED_${duration}.log"
 	else
 		log "Success  build: $1/$2 number: $next_bn duration: $duration"
 		echo "[INFO] Success" >> "$job_log"
-		mv "$job_log" "${job_log}_success_${duration}.log"
+		mv "$job_log" "${job_log}_SUCCESS_${duration}.log"
 	fi
 }
 
