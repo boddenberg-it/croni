@@ -197,9 +197,10 @@ function update() {
 
 	new_head="$(revision)"
 
-	date="$(date %H:%m:%S+_%d-%m-%y)"
+	date="$(date +%H:%m:%S_%d-%m-%y)"
 	# update front-end
-	echo "$(git config --get remote.origin.url)" > $submodule_base/webroot/logs/runtime/repository
+	remote_url="$(git config --get remote.origin.url)"
+	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/repository
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
 	echo "$date" > $submodule_base/webroot/logs/runtime/last_fetch
 	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/croni_update_interval
