@@ -40,9 +40,17 @@
 
     <script>
          $(function() { $("#includeRepo").load("logs/runtime/repository");  });
+         $(function() { $("#includeBranch").load("logs/runtime/branch");  });
          $(function() { $("#includeRevision").load("logs/runtime/revision");  });
-         $(function() { $("#includeLastFetch").load("logs/runtime/last_fetch");  });
-         $(function() { $("#includeCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
+         $(function() { $("#includeCroniUpdateInterval").load("logs/runtime/update_interval");  });
+         $(function() { $("#includeLastUpdate").load("logs/runtime/last_update");  });
+
+         $(function() { $("#includeCroniRepo").load("logs/runtime/croni_repository");  });
+         $(function() { $("#includeCroniBranch").load("logs/runtime/croni_branch");  });
+         $(function() { $("#includeCroniRevision").load("logs/runtime/croni_revision");  });
+         $(function() { $("#includeCroniCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
+         $(function() { $("#includeCroniLastUpdate").load("logs/runtime/croni_last_update");  });
+
          $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
     </script>
 
@@ -76,12 +84,32 @@
           <div class="starter-template">
 
             <h2>welcome to croni</h2>
-            <p>&nbsp;&nbsp;&nbsp; <u>Repository</u>:&nbsp;<i id="includeRepo"></i>&nbsp;&nbsp;&nbsp;
-               &nbsp;&nbsp;&nbsp; <u>Revision</u>:&nbsp;<i id="includeRevision"></i> &nbsp;&nbsp;&nbsp;
-               &nbsp;&nbsp;&nbsp; <u>Update Expression</u>:&nbsp;<i id="includeCroniUpdateInterval"></i> &nbsp;&nbsp;&nbsp;
-               &nbsp;&nbsp;&nbsp; <u>Last&nbsp;Fetch</u>:&nbsp;<i id="includeLastFetch"></i> &nbsp;&nbsp;&nbsp;
-             <br>
-            </p>
+            <table style="width:100%" border="1">
+            <tr>
+              <td><b>&nbsp;purpose&nbsp;</b></td>
+              <td><b>&nbsp;repository&nbsp;</b></td>
+              <td><b>&nbsp;branch&nbsp;</b></td>
+              <td><b>&nbsp;revision&nbsp;</b></td>
+              <td><b>&nbsp;update expression&nbsp;</b></td>
+                <td><b>&nbsp;last update&nbsp;</b></td>
+          </tr>
+          <tr>
+            <td>&nbsp;jobs&nbsp;</td>
+            <td>&nbsp;<i id="includeRepo">&nbsp;</td>
+            <td>&nbsp;<i id="includeBranch">&nbsp;</td>
+            <td>&nbsp;<i id="includeRevision">&nbsp;</td>
+            <td>&nbsp;<i id="includeUpdateInterval">&nbsp;</td>
+            <td>&nbsp;<i id="includeLastUpdate">&nbsp;</td>
+        </tr>
+          <tr>
+            <td>&nbsp;submodule&nbsp;</td>
+            <td>&nbsp;<i id="includeCroniRepo">&nbsp;</td>
+            <td>&nbsp;<i id="includeCroniBranch">&nbsp;</td>
+            <td>&nbsp;<i id="includeCroniRevision">&nbsp;</td>
+            <td>&nbsp;<i id="includeCroniUpdateInterval">&nbsp;</td>
+            <td>&nbsp;<i id="includeCroniLastUpdate">&nbsp;</td>
+        </tr>
+        </table>
 
     <!-- MODAL START -->
     <div class="modal fade" id="myModal" role="dialog">

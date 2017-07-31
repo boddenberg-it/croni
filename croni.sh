@@ -180,6 +180,19 @@ function upgrade() {
 	else
 		log "Upgrade: nothing changed. currrent HEAD: $new_head"
 	fi
+
+	cd "$submodule_base" || exit
+	date="$(date +%H:%m:%S\ %d.%m.%y)"
+	# update front-end
+	remote_url="$(git config --get remote.origin.url)"
+	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/croni_repository
+	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/croni_revision
+	echo "$date" > $submodule_base/webroot/logs/runtime/croni_last_update
+	echo "manual" > $submodule_base/webroot/logs/runtime/croni_update_interval
+
+
+	# always load jobs to fail fast!
+	update
 }
 
 function update() {
@@ -202,8 +215,8 @@ function update() {
 	remote_url="$(git config --get remote.origin.url)"
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/repository
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
-	echo "$date" > $submodule_base/webroot/logs/runtime/last_fetch
-	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/croni_update_interval
+	echo "$date" > $submodule_base/webroot/logs/runtime/last_update
+	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/update_interval
 
 	if [ "$new_head" != "$old_head" ]; then
 		log "update call: changes found -> deploying jobs"
