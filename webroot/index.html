@@ -44,18 +44,6 @@
          $(function() { $("#includeLastFetch").load("logs/runtime/last_fetch");  });
          $(function() { $("#includeCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
          $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
-
-	$(".act").click(function() {
-  var val = $(this).text();
-  if (val == "More") {
-    $("div").css('height', '200px');
-    $(this).text("less");
-  } else {
-    $("div").css('height', '20px');
-    $(this).text("more");
-  }
-  return false;
-});
     </script>
 
   </head>
@@ -95,12 +83,25 @@
              <br>
             </p>
 
-	<pre><p id="includeFoo" style="text-align: left;"></p></pre>
-
-<a href="" id="log" class="act">More</a>
-<div>This fskdljfl sflsdajfsadf
-  <br />fsdafsdfsadfsdf dfjsadf slfkjsf</div>
-
+    <!-- MODAL START -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Console Log:</h3>
+          </div>
+          <div class="modal-body">
+            <pre><p id="includeFoo"></p></pre>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- MODAL END -->
 
               <h3>Overall stats</h3>
               <table style="width:100%" border="1">
@@ -164,7 +165,7 @@
 <tr>
     <td>gestern</td>
     <td><a href="logs/test_01/foobar_01/">test_01/foobar_01.sh gegeg kgke e0gjejg ehgehg</a></td>
-    <td><a href="logs/test_01/foobar_01/0.html">0</a></td>
+    <td><a href="" data-toggle="modal" data-target="#myModal">1337</a></td>
     <td>1m 12s</td>
     <td>OK</td>
     <td>-</td>
