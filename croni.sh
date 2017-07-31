@@ -33,7 +33,11 @@ function deploy() {
 	new_crontab="$base/.cronitab_new"
 
 	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" > $new_crontab
-	echo "$croni_update_expression $submodule_base/croni.sh update" >> $new_crontab
+	echo "$update_expression $submodule_base/croni.sh update" >> $new_crontab
+
+	if [ "$croni_update_expression" != "" ]; then
+		echo "$croni_update_expression $submodule_base/croni.sh upgrade" >> $new_crontab
+	fi
 	echo "" >> $new_crontab
 
 	projects="$(ls "$base/croni_jobs")"
@@ -218,7 +222,7 @@ function update() {
 	echo "$(git branch)" > $submodule_base/webroot/logs/runtime/branch
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
 	echo "$date" > $submodule_base/webroot/logs/runtime/last_update
-	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/update_interval
+	echo "$update_expression" > $submodule_base/webroot/logs/runtime/update_interval
 
 	if [ "$new_head" != "$old_head" ]; then
 		log "update call: changes found -> deploying jobs"
