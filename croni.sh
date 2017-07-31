@@ -197,7 +197,7 @@ function update() {
 
 	new_head="$(revision)"
 
-	date="$(date +%H:%m:%S_%d-%m-%y)"
+	date="$(date +%H:%m:%S\ %d.%m.%y)"
 	# update front-end
 	remote_url="$(git config --get remote.origin.url)"
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/repository
