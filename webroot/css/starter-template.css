@@ -1,9 +1,24 @@
 body {
   padding-top: 50px;
 }
+
 .starter-template {
   padding: 40px 15px;
   text-align: center;
 }
 
-.log p { white-space: pre; }
+/* croni bootstrap changes for build log modal */
+.modal-body {
+  text-align: left;
+  padding: 0px;
+}
+
+.modal-dialog {
+   width: 85%;
+}
+
+pre {
+  background-color: black;
+  color: white;
+  margin: 0px;
+}
