@@ -1,5 +1,5 @@
 body {
-  padding-top: 50px;
+  padding-top: 2%;
 }
 
 .starter-template {
@@ -7,7 +7,7 @@ body {
   text-align: center;
 }
 
-a,a:hover {
+a,a:hover,a:focus {
   color: black;
   text-decoration: underline;
 }
