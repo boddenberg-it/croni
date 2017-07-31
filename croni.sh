@@ -5,21 +5,26 @@ function log() {
 }
 
 function init() {
-	mkdir -p $base/croni_logs/
 
-	cat <<-EOT > "$HOME/.croni"
-		# croni instance configuration
+	mkdir -p $submodule_base/webroot/logs/runtime || true
+	ls "$base/croni_logs" || ln -s $submodule_base/webroot/logs/ $base/croni_logs
 
-		croni_run=false
-		croni_send_mail=false
-	EOT
+	if [ ! -f "$HOME/.croni" ]; then
+		cat <<-EOT > "$HOME/.croni"
+			# croni instance configuration file
+			# https://git.boddenberg.it/croni
+
+			croni_run=false
+			croni_send_mail=false
+		EOT
+	fi
 
 	if [ ! -f "index.html" ]; then
-		ln -s croni/webroot/index.html index.html
+		ln -s croni/webroot/index.html $base/index.html
 	fi
 
 	if [ ! -f "croni.sh" ]; then
-		ln -s croni/croni.sh croni.sh
+		ln -s croni/croni.sh $base/croni.sh
 	fi
 
 	deploy
@@ -179,14 +184,9 @@ function upgrade() {
 
 	new_head="$(revision croni)"
 
-	if [ "$old_head" != "$new_head" ]; then
-		log "Upgrade: croni has been updated old: $old_head new: $new_head"
-	else
-		log "Upgrade: nothing changed. currrent HEAD: $new_head"
-	fi
-
 	cd "$submodule_base" || exit
 	date="$(date +%H:%m:%S\ %d.%m.%y)"
+
 	# update front-end
 	remote_url="$(git config --get remote.origin.url)"
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/croni_repository
@@ -195,9 +195,13 @@ function upgrade() {
 	echo "$date" > $submodule_base/webroot/logs/runtime/croni_last_update
 	echo "manual" > $submodule_base/webroot/logs/runtime/croni_update_interval
 
+	if [ "$new_head" != "$old_head" ]; then
+		log "Upgrade: croni has been updated old: $old_head new: $new_head"
+		deploy
+	else
+		log "Upgrade: nothing changed. currrent HEAD: $new_head"
+	fi
 
-	# always load jobs to fail fast!
-	update
 }
 
 function update() {
