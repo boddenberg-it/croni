@@ -7,6 +7,16 @@ body {
   text-align: center;
 }
 
+a,a:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+/* table coloring for better readability */
+tr:nth-child(even) {background: #FFF}
+tr:nth-child(odd) {background: #EEE}
+tr:first-child {background: #CCC}
+
 /* croni bootstrap changes for build log modal */
 .modal-body {
   text-align: left;
