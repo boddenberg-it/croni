@@ -186,6 +186,7 @@ function upgrade() {
 	# update front-end
 	remote_url="$(git config --get remote.origin.url)"
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/croni_repository
+	echo "$(git branch)" > $submodule_base/webroot/logs/runtime/croni_branch
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/croni_revision
 	echo "$date" > $submodule_base/webroot/logs/runtime/croni_last_update
 	echo "manual" > $submodule_base/webroot/logs/runtime/croni_update_interval
@@ -214,6 +215,7 @@ function update() {
 	# update front-end
 	remote_url="$(git config --get remote.origin.url)"
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/repository
+	echo "$(git branch)" > $submodule_base/webroot/logs/runtime/branch
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
 	echo "$date" > $submodule_base/webroot/logs/runtime/last_update
 	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/update_interval
