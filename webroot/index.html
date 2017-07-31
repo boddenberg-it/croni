@@ -51,6 +51,8 @@
          $(function() { $("#includeCroniCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
          $(function() { $("#includeCroniLastUpdate").load("logs/runtime/croni_last_update");  });
 
+
+         $(function() { $("#includeNavbar").load("logs/runtime/navbar");  });
          $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
     </script>
 
@@ -70,11 +72,7 @@
               <a class="navbar-brand active" href="index.html">croni</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav">
-                  <li><a href="test_01.html">test_01</a></li>
-                <li><a href="restore.php">test_02</a></li>
-                <li><a href="sync.php">test_03</a></li>
-              </ul>
+              <ul class="nav navbar-nav" id="includeNavbar"></ul>
             </div><!--/.nav-collapse -->
           </div>
         </nav>
