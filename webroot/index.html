@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="anbada.ico">
+    <link rel="icon" href="croni.ico">
 
     <title>croni</title>
 
@@ -39,10 +39,11 @@
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 
     <script>
-         $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
          $(function() { $("#includeRepo").load("logs/runtime/repository");  });
          $(function() { $("#includeRevision").load("logs/runtime/revision");  });
          $(function() { $("#includeLastFetch").load("logs/runtime/last_fetch");  });
+         $(function() { $("#includeCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
+         $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
 
 	$(".act").click(function() {
   var val = $(this).text();
@@ -86,16 +87,17 @@
 
           <div class="starter-template">
 
-            <h2>Welcome to croni</h2>
+            <h2>welcome to croni</h2>
             <p>&nbsp;&nbsp;&nbsp; <u>Repository</u>:&nbsp;<i id="includeRepo"></i>&nbsp;&nbsp;&nbsp;
                &nbsp;&nbsp;&nbsp; <u>Revision</u>:&nbsp;<i id="includeRevision"></i> &nbsp;&nbsp;&nbsp;
-               &nbsp;&nbsp;&nbsp; <u>Last&nbsp;Fetch</u>:&nbsp;<i id="includeLastFetch"></i>
+               &nbsp;&nbsp;&nbsp; <u>Last&nbsp;Fetch</u>:&nbsp;<i id="includeLastFetch"></i> &nbsp;&nbsp;&nbsp;
+               &nbsp;&nbsp;&nbsp; <u>Update Expression</u>:&nbsp;<i id="#includeCroniUpdateInterval"></i> &nbsp;&nbsp;&nbsp;
              <br>
             </p>
 
 	<pre><p id="includeFoo" style="text-align: left;"></p></pre>
 
-<a href="" id="log" class="act">More</a> 
+<a href="" id="log" class="act">More</a>
 <div>This fskdljfl sflsdajfsadf
   <br />fsdafsdfsadfsdf dfjsadf slfkjsf</div>
 

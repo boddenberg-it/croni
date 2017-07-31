@@ -89,6 +89,7 @@ function deploy_job() {
 
 ### ###
 function run() {
+
 	if [ ! $croni_run ]; then
 		exit 0
 	fi
@@ -196,7 +197,15 @@ function update() {
 
 	new_head="$(revision)"
 
+	date="$(date %H:%m:%S+_%d-%m-%y)"
+	# update front-end
+	echo "$(git config --get remote.origin.url)" > $submodule_base/webroot/logs/runtime/repository
+	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
+	echo "$date" > $submodule_base/webroot/logs/runtime/last_fetch
+	echo "$croni_update_expression" > $submodule_base/webroot/logs/runtime/croni_update_interval
+
 	if [ "$new_head" != "$old_head" ]; then
+		log "update call: changes found -> deploying jobs"
 		deploy
 	fi
 }
