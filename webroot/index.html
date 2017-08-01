@@ -47,6 +47,7 @@ function AlertIt() {
          $(function() { $("#includeNavbar").load("logs/runtime/navbar");  });
          $(function() { $("#includeProjects").load("logs/runtime/projects");  });
          $(function() { $("#includeTimeline").load("logs/runtime/timeline");  });
+         $(function() { $("#includeCroniTable").load("logs/runtime/croni_table");  });
 
          $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
     </script>
@@ -78,62 +79,33 @@ function AlertIt() {
             <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"target="_blank">License GPL 3.0</a>
             <br>
             <br>
-          <table style="width:100%" border="1">
-            <tr>
-              <td><b>&nbsp;purpose&nbsp;</b></td>
-              <td><b>&nbsp;repository&nbsp;</b></td>
-              <td><b>&nbsp;branch&nbsp;</b></td>
-              <td><b>&nbsp;revision&nbsp;</b></td>
-              <td><b>&nbsp;update expression&nbsp;</b></td>
-                <td><b>&nbsp;last update&nbsp;</b></td>
-          </tr>
-          <tr>
-            <td>&nbsp;jobs&nbsp;</td>
-            <td>&nbsp;<i id="includeRepo">&nbsp;</td>
-            <td>&nbsp;<i id="includeBranch">&nbsp;</td>
-            <td>&nbsp;<i id="includeRevision">&nbsp;</td>
-            <td>&nbsp;<i id="includeUpdateInterval">&nbsp;</td>
-            <td>&nbsp;<i id="includeLastUpdate">&nbsp;</td>
-        </tr>
-          <tr>
-            <td>&nbsp;submodule&nbsp;</td>
-            <td>&nbsp;<i id="includeCroniRepo">&nbsp;</td>
-            <td>&nbsp;<i id="includeCroniBranch">&nbsp;</td>
-            <td>&nbsp;<i id="includeCroniRevision">&nbsp;</td>
-            <td>&nbsp;<i id="includeCroniUpdateInterval">&nbsp;</td>
-            <td>&nbsp;<i id="includeCroniLastUpdate">&nbsp;</td>
-        </tr>
-        </table>
-
-
-        <a href="javascript:AlertIt();">click me</a>
-
-
-    <!-- MODAL START -->
-    <div class="modal fade" id="myModal" role="dialog">
-      <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3 class="modal-title">Console Log:</h3>
+            <div id="includeCroniTable"></div>
+            <h3>projects</h3>
+            <div id="includeProjects"></div>
+            <h3>timeline</h3>
+            <div id="includeTimeline"></div>
           </div>
-          <div class="modal-body">
-            <pre><p id="includeFoo"></p></pre>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <!-- MODAL END -->
+        </div><!-- /.container -->
 
-  <h3>projects</h3>
-  <div id="includeProjects"></div>
-  <h3>timeline</h3>
-  <div id="includeTimeline"></div>
-</div>
-</div><!-- /.container -->
+            <!-- MODAL START -->
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Console Log:</h3>
+                  </div>
+                  <div class="modal-body">
+                    <pre><p id="includeFoo"></p></pre>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- MODAL END -->
+
 </body>
 </html>
