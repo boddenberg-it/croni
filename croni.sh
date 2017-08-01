@@ -196,7 +196,7 @@ function upgrade() {
 	update_croni_table
 }
 
-updat_croni_table(){
+update_croni_table(){
 	croni_revision=$(revision croni)
 	revision=$(revision)
 
