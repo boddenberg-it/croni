@@ -1,0 +1,28 @@
+
+croni_table_template="<table>
+        <tr>
+              <td><b>purpose</b></td>
+              <td><b>repository</b></td>
+              <td><b>branch</b></td>
+              <td><b>revision</b></td>
+              <td><b>update expression</b></td>
+              <td><b>last update</b></td>
+        </tr>
+        <tr>
+            <td>jobs</td>
+            <td>$repo</td>
+            <td>$branch</td>
+            <td>$revision</td>
+            <td>$update_expression</td>
+            <td>$last_update</td>
+        </tr>
+        <tr>
+            <td>submodule</td>
+            <td>$croni_repo</td>
+            <td>$croni_branch</td>
+            <td>$croni_revision</td>
+            <td>$croni_update_expression</td>
+            <td>$croni_last_update</td>
+        </tr>
+</table>
+"

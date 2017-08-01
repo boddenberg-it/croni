@@ -170,10 +170,12 @@ function revision() {
 }
 
 function upgrade() {
-	old_head="$(revision croni)"
 	cd $base || exit
-	git submodule update --remote
+	echo "$(date +%H:%m:%S\ %d.%m.%y)" > $submodule_base/webroot/logs/runtime/croni_last_update
 
+	old_head="$(revision croni)"
+
+	git submodule update --remote
 	if [ $? -gt 0 ]; then
 		cd $submodule_base || exit
 		git stash
@@ -184,17 +186,6 @@ function upgrade() {
 
 	new_head="$(revision croni)"
 
-	cd "$submodule_base" || exit
-	date="$(date +%H:%m:%S\ %d.%m.%y)"
-
-	# update front-end
-	remote_url="$(git config --get remote.origin.url)"
-	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/croni_repository
-	echo "$(git branch)" > $submodule_base/webroot/logs/runtime/croni_branch
-	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/croni_revision
-	echo "$date" > $submodule_base/webroot/logs/runtime/croni_last_update
-	echo "manual" > $submodule_base/webroot/logs/runtime/croni_update_interval
-
 	if [ "$new_head" != "$old_head" ]; then
 		log "Upgrade: croni has been updated old: $old_head new: $new_head"
 		deploy
@@ -202,11 +193,34 @@ function upgrade() {
 		log "Upgrade: nothing changed. currrent HEAD: $new_head"
 	fi
 
+	update_croni_table
+}
+
+updat_croni_table(){
+	croni_revision=$(revision croni)
+	revision=$(revision)
+
+	cd "$base" || exit
+	remote_url="$(git config --get remote.origin.url)"
+	repo="<a href=\"$remote_url\"croni_>$remote_url</a>"
+	branch="$(git branch)"
+	revision="${revision:0:7}"
+	last_update="$(cat $submodule_base/webroot/logs/runtime/last_update)"
+
+	cd "$submodule_base" || exit
+	croni_remote_url="$(git config --get remote.origin.url)"
+	croni_repo="<a href=\"$remote_url\">$remote_url</a>"
+	croni_branch="$(git branch)"
+	croni_revision="${revision:0:7}"
+	croni_last_update="$(cat $submodule_base/webroot/logs/runtime/croni_last_update)"
+
+	source "$submodule_base/webroot/templates"
+	echo "$croni_table_template" > "$submodule_base/webroot/logs/runtime/croni_table"
 }
 
 function update() {
 	cd $base || exit
-
+	echo "$(date +%H:%m:%S\ %d.%m.%y)" > $submodule_base/webroot/logs/runtime/last_update
 	old_head="$(revision)"
 
 	git fetch origin
@@ -225,7 +239,7 @@ function update() {
 	echo "<a href=\"$remote_url\">$remote_url</a>" > $submodule_base/webroot/logs/runtime/repository
 	echo "$(git branch)" > $submodule_base/webroot/logs/runtime/branch
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
-	echo "$date" > $submodule_base/webroot/logs/runtime/last_update
+	echo "$(date +%H:%m:%S\ %d.%m.%y)" > $submodule_base/webroot/logs/runtime/last_update
 	echo "$update_expression" > $submodule_base/webroot/logs/runtime/update_interval
 
 	# update navbar
@@ -238,6 +252,7 @@ function update() {
 		log "update call: changes found -> deploying jobs"
 		deploy
 	fi
+	update_croni_table
 }
 
 source_it() {

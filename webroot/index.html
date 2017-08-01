@@ -25,29 +25,12 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
 
-<script type="text/javascript">
-function AlertIt() {
-  alert(<div id="includeRepo"></div>);
-}
-</script>
-
 <!-- TODO: refactor this! -->
     <script>
-         $(function() { $("#includeRepo").load("logs/runtime/repository");  });
-         $(function() { $("#includeBranch").load("logs/runtime/branch");  });
-         $(function() { $("#includeRevision").load("logs/runtime/revision");  });
-         $(function() { $("#includeCroniUpdateInterval").load("logs/runtime/update_interval");  });
-         $(function() { $("#includeLastUpdate").load("logs/runtime/last_update");  });
-
-         $(function() { $("#includeCroniRepo").load("logs/runtime/croni_repository");  });
-         $(function() { $("#includeCroniBranch").load("logs/runtime/croni_branch");  });
-         $(function() { $("#includeCroniRevision").load("logs/runtime/croni_revision");  });
-         $(function() { $("#includeCroniCroniUpdateInterval").load("logs/runtime/croni_update_interval");  });
-         $(function() { $("#includeCroniLastUpdate").load("logs/runtime/croni_last_update");  });
          $(function() { $("#includeNavbar").load("logs/runtime/navbar");  });
+         $(function() { $("#includeCroniTable").load("logs/runtime/croni_table");  });
          $(function() { $("#includeProjects").load("logs/runtime/projects");  });
          $(function() { $("#includeTimeline").load("logs/runtime/timeline");  });
-         $(function() { $("#includeCroniTable").load("logs/runtime/croni_table");  });
 
          $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
     </script>
