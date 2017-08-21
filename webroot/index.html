@@ -27,12 +27,15 @@
 
 <!-- TODO: refactor this! -->
     <script>
-         $(function() { $("#includeNavbar").load("logs/runtime/navbar");  });
-         $(function() { $("#includeCroniTable").load("logs/runtime/croni_table");  });
-         $(function() { $("#includeProjects").load("logs/runtime/projects");  });
-         $(function() { $("#includeTimeline").load("logs/runtime/timeline");  });
+      var show_console_log = function(url) {
+        $("#remote-modal .modal-body").load(url);
+        $("#remote-modal").modal("show");
+      }
 
-         $(function() { $("#includeFoo").load("logs/tests/test_fail/test_fail.sh_0_2_FAILED_0.log");  });
+      $(function() { $("#includeNavbar").load("logs/runtime/navbar");  });
+      $(function() { $("#includeCroniTable").load("logs/runtime/croni_table");  });
+      $(function() { $("#includeProjects").load("logs/runtime/projects");  });
+      $(function() { $("#includeTimeline").load("logs/runtime/timeline");  });
     </script>
 
   </head>
@@ -61,6 +64,7 @@
             <br>
             <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"target="_blank">License GPL 3.0</a>
             <br>
+            <a href="javascript:show_console_log('index.html');">TESTLINK</a>
             <br>
             <div id="includeCroniTable"></div>
             <h3>projects</h3>
@@ -68,27 +72,23 @@
             <h3>timeline</h3>
             <div id="includeTimeline"></div>
           </div>
-        </div><!-- /.container -->
+        </div>
 
-            <!-- MODAL START -->
-            <div class="modal fade" id="myModal" role="dialog">
-              <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Console Log:</h3>
-                  </div>
-                  <div class="modal-body">
-                    <pre><p id="includeFoo"></p></pre>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
+        <!-- console log -->
+        <div class="modal fade" id="remote-modal" role="dialog">
+          <div class="modal-dialog">
+             <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">console log</h3>
+              </div>
+              <div class="modal-body"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div>
-          <!-- MODAL END -->
+          </div>
+        </div>
 
-</body>
+  </body>
 </html>
