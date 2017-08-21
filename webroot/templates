@@ -1,3 +1,4 @@
+# croni templates file
 
 croni_table_template="<table>
         <tr>
@@ -5,7 +6,6 @@ croni_table_template="<table>
               <td><b>repository</b></td>
               <td><b>branch</b></td>
               <td><b>revision</b></td>
-              <td><b>update expression</b></td>
               <td><b>last update</b></td>
         </tr>
         <tr>
@@ -13,7 +13,6 @@ croni_table_template="<table>
             <td>$repo</td>
             <td>$branch</td>
             <td>$revision</td>
-            <td>$update_expression</td>
             <td>$last_update</td>
         </tr>
         <tr>
@@ -21,8 +20,43 @@ croni_table_template="<table>
             <td>$croni_repo</td>
             <td>$croni_branch</td>
             <td>$croni_revision</td>
-            <td>$croni_update_expression</td>
             <td>$croni_last_update</td>
         </tr>
 </table>
 "
+
+project_script_header_template="<tr>
+                <td><b>project||script</b></td>
+                <td><b>usage</b></td>
+                <td><b>health</b></td>
+            </tr>
+"
+
+projects_scripts_item_template="<tr>
+                <td><a href=\"$item.html\">$item</a></td>
+                <td>$usage</td>
+                <td>$state</td>
+        </tr>
+"
+
+timeline_header_template="<tr>
+    <td><b>date</b></td>
+    <td><b>$project_or_script</b></td>
+    <td><b>number</b></td>
+    <td><b>duration</b></td>
+    <td><b>result</b></td>
+  </tr>
+"
+
+timeline_item_template="<tr>
+    <td>$date</td>
+    <td><a href=\"$item_path\">${item}.sh</a></td>
+    <td><a href="javascript:show_console_log(\'$log_path\');">$build_number</a></a></td>
+    <td>$duration</td>
+    <td>$state</td>
+  </tr>
+"
+
+# TODO: move style to css
+open_table_template="<table style="width:100%" border="1">"
+close_table_template="</table>"
