@@ -1,7 +1,7 @@
 # croni templates file
 
-
-page="<!DOCTYPE html>
+# HTML
+page_start="<!DOCTYPE html>
 <html lang=\"en\">
   <head>
     <meta charset=\"utf-8\">
@@ -29,13 +29,13 @@ page="<!DOCTYPE html>
     <script src=\"js/ie10-viewport-bug-workaround.js\"></script>
     <script>
       var show_console_log = function(url) {
-        $(\"#remote-modal .modal-body\").load(url);
-        $(\"#remote-modal\").modal(\"show\");
+        \$(\"#remote-modal .modal-body\").load(url);
+        \$(\"#remote-modal\").modal(\"show\");
       }
-      $(function() { $(\"#includeNavbar\").load(\"logs/runtime/navbar\");  });
-      $(function() { $(\"#includeCroniTable\").load(\"logs/runtime/croni_table\");  });
-      $(function() { $(\"#${first_include}\").load(\"${path_first_include}\");  });
-      $(function() { $(\"#${second_include}\").load(\"${path_second_include}\");  });
+      \$(function() { \$(\"#includeNavbar\").load(\"logs/.runtime/navbar\");  });
+      \$(function() { \$(\"#croni_table\").load(\"logs/.runtime/croni_table\");  });
+      \$(function() { \$(\"#${first_include}\").load(\"${path_first_include}\");  });
+      \$(function() { \$(\"#${second_include}\").load(\"${path_second_include}\");  });
     </script>
   </head>
   <body>
@@ -81,7 +81,39 @@ page_end="
 </html>
 "
 
-# tables
+### sub templates using page_{start,end}
+
+landing_page="
+  <h2><a href=\"javascript:show_console_log('logs/croni.log');\">welcome to croni</a></h2>
+  <a href=\"https://git.boddenberg.it/croni\" target=\"_blank\">https://git.boddenberg.it/croni</a>
+  <br>
+  <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html \"target=\"_blank\">license GPL 3.0</a>
+  <br>
+  <br>
+  <div id=\"croni_table\"></div>
+  <h3>projects</h3>
+  <div id=\"croni_projects\"></div>
+  <h3>timeline</h3>
+  <div id=\"croni_timeline\"></div>
+"
+
+project_page="
+  <h2>$project</h2>
+  <p></p>
+  <h3>$project</h3>
+  <div id=\"$project\"></div>
+  <h3>timeline</h3>
+  <div id=\"$project\"></div>
+"
+
+job_page="
+  <h2>$script</h2>
+  <p></p>
+  <h3>timeline</h3>
+  <div id=\"$script\"></div>
+"
+
+### tables
 
 open_table_template="<table>"
 close_table_template="</table>"
@@ -119,7 +151,7 @@ project_script_header_template="<tr>
 "
 
 projects_scripts_item_template="<tr>
-                <td><a href=\"$item.html\">$item</a></td>
+                <td><a href=\"${item}.html\">$item</a></td>
                 <td>$usage</td>
                 <td>$state</td>
         </tr>
