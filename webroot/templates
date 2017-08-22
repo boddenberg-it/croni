@@ -48,10 +48,10 @@ timeline_header_template="<tr>
   </tr>
 "
 
-timeline_item_template="<tr>
+timeline_item_start_template="<tr>
     <td>$date</td>
     <td><a href=\"$item_path\">${item}.sh</a></td>
-    <td><a href="javascript:show_console_log(\'$log_path\');">$build_number</a></a></td>
+    <td><a href=\"javascript:show_console_log(\'$log_path\');\">$build_number</a></a></td>
     <td>$duration</td>
     <td>$state</td>
   </tr>
