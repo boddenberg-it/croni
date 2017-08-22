@@ -50,25 +50,28 @@ function init() {
 
 function deploy() {
 
-	mkdir -p $base/logs/
+	update_navbar
 
 	old_crontab="$base/.cronitab"
 	new_crontab="$base/.cronitab_new"
 
-	echo "# croni gererated crontab (https://git.boddenberg.it/croni)" > $new_crontab
-	echo "$update_expression $submodule_base/croni.sh update" >> $new_crontab
+	echo "$update_expression $submodule_base/croni.sh update" > $new_crontab
 
 	if [ "$croni_update_expression" != "" ]; then
 		echo "$croni_update_expression $submodule_base/croni.sh upgrade" >> $new_crontab
 	fi
-	echo "" >> $new_crontab
 
 	projects="$(ls "$base/croni_jobs")"
 	for project in $projects; do
+
+		create_project_page $project
 		jobs="$(ls "$base/croni_jobs/$project")"
+
 		for job in $jobs; do
+			create_job_page "$project" "$job"
 			deploy_job "$project" "$job"
 		done
+
 	done
 
 	# deploy new crontab if changes have been introduced
@@ -150,37 +153,45 @@ function upgrade() {
 
 
 
-
 ### page creation ###
+function create_page() {
+
+	source "$templates"
+
+	if [ ! "$3 " = "" ]; then
+		dest="$submodule_base/webroot/$1.html"
+	else
+		dest="$submodule_base/webroot/$3-$1.html"
+	fi
+	first_include="$1_project"
+	path_first_include="$submodule_base/webroot/logs/.runtime/$1_project"
+	second_include="$1_timeline"
+	path_second_include="$submodule_base/webroot/logs/.runtime/$1_timeline"
+
+	echo "$page_start" > "$dest"
+	echo "$2" >> "$dest"
+	echo "$page_end" >> "$dest"
+}
+
 function create_croni_page() {
-	source "$submodule_base/webroot/templates"
-	create_page "croni_projects" "croni_projects" \
-		"croni_timeline" "croni_timeline" \
-		"$landing_page" "index.html"
+	source "$templates"
+	create_page "croni" "$landing_page"
+	mv "$submodule_base/webroot/croni.html" "$submodule_base/webroot/index.html"
 }
 
 function create_project_page() {
-	exit 0
+	project="$1"
+	source "$templates"
+	create_page "$project" "$project_page"
 }
 
 function create_job_page() {
-	exit 0
+	project="$1"
+	script="$2"
+	source "$templates"
+	create_page "$script" "$job_page" "$project"
 }
 
-function create_page() {
-
-		source "$submodule_base/webroot/templates"
-		dest="$submodule_base/webroot/$6"
-
-	  first_include="$1"
-		path_first_include="$submodule_base/webroot/$2"
-		second_include="$3"
-		path_second_include="$submodule_base/webroot/$4"
-
-		echo "$page_start" > "$dest"
-		echo "$5" >> "$dest"
-		echo "$page_end" >> "$dest"
-}
 
 # parsing job value from job file
 function job_value() {
@@ -202,12 +213,13 @@ function job_value() {
 function deploy_job() {
 	croni="$(job_value "$1" "$2" "croni")"
 	if [ "$croni" = "" ]; then
-		log "[ERROR] No croni variable declared in $base/croni_jobs/$1/$2"
+		log "[ERROR] No cron_expression declared in $base/jobs/$1/$2"
 		echo "# $croni $submodule_base/croni.sh run $1 $2 -- FAILED" >> $new_crontab
 	else
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
 
+	# ensure logs folder exists
 	job_logs="$base/logs/$1/$2"
 	job_logs="${job_logs//.sh/}"
 	mkdir -p "$job_logs"
@@ -290,9 +302,8 @@ function revision() {
 	echo "$(git rev-parse HEAD)"
 }
 
-
-
-update_nav_bar() {
+# update static navbar and croni-table
+update_navbar() {
 	# update navbar
 	rm "$base/logs/.runtime/navbar" || true
 	for p in $(ls "$base/croni_jobs"); do
@@ -319,13 +330,16 @@ update_croni_table(){
 	croni_revision="${croni_revision:0:7}"
 	croni_last_update="$(cat $submodule_base/webroot/logs/.runtime/croni_last_update)"
 
-	source "$submodule_base/webroot/templates"
+	source "$templates"
 	echo "$croni_table_template" > "$submodule_base/webroot/logs/.runtime/croni_table"
 }
 
+# actual entry point
 submodule_base="$(dirname "$(readlink -f $0)")"
 base="${submodule_base:0:-5}"
-export base submodule_base
+templates="$submodule_base/webroot/templates"
+
+export base submodule_base templates
 
 if [ ! "$1" = "init" ]; then
 	source "$base/croni.cfg"
