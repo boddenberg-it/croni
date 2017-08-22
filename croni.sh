@@ -50,7 +50,7 @@ function init() {
 
 function deploy() {
 
-	mkdir -p $base/croni_logs/
+	mkdir -p $base/logs/
 
 	old_crontab="$base/.cronitab"
 	new_crontab="$base/.cronitab_new"
@@ -74,11 +74,11 @@ function deploy() {
 	# deploy new crontab if changes have been introduced
 	diff="$(diff "$old_crontab" "$new_crontab")"
 	if [ $? -gt 0 ]; then
-		log "deploy call: Folloging changing have been applied: $diff [end of changes]"
+		log "Job/script changes have been fetched... successful update!"
 		cp "$new_crontab" "$old_crontab"
 		crontab "$old_crontab"
 		/etc/init.d/cron reload
-		rm "$new_crontab"
+		rm "$new_crontab" # clean up
 	else
 		log "deploy call: Nothing changed, nothing added."
 	fi
@@ -208,7 +208,7 @@ function deploy_job() {
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
 
-	job_logs="$base/croni_logs/$1/$2"
+	job_logs="$base/logs/$1/$2"
 	job_logs="${job_logs//.sh/}"
 	mkdir -p "$job_logs"
 }
@@ -294,9 +294,9 @@ function revision() {
 
 update_nav_bar() {
 	# update navbar
-	rm "$base/croni_logs/.runtime/navbar" || true
+	rm "$base/logs/.runtime/navbar" || true
 	for p in $(ls "$base/croni_jobs"); do
-		echo "<li><a href=\"$p.html\">$p</a></li>" >> "$base/croni_logs/.runtime/navbar"
+		echo "<li><a href=\"$p.html\">$p</a></li>" >> "$base/logs/.runtime/navbar"
 	done
 }
 
