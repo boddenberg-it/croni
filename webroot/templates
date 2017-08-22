@@ -1,6 +1,5 @@
 # croni templates file
 
-# HTML
 page_start="<!DOCTYPE html>
 <html lang=\"en\">
   <head>
@@ -87,30 +86,38 @@ landing_page="
   <h2><a href=\"javascript:show_console_log('logs/croni.log');\">welcome to croni</a></h2>
   <a href=\"https://git.boddenberg.it/croni\" target=\"_blank\">https://git.boddenberg.it/croni</a>
   <br>
-  <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html \"target=\"_blank\">license GPL 3.0</a>
-  <br>
   <br>
   <div id=\"croni_table\"></div>
   <h3>projects</h3>
-  <div id=\"croni_projects\"></div>
+  <table>
+    <div id=\"croni_projects\"></div>
+  </table>
   <h3>timeline</h3>
-  <div id=\"croni_timeline\"></div>
+  <table>
+    <div id=\"croni_timeline\"></div>
+  </table>
 "
 
 project_page="
   <h2>$project</h2>
   <p></p>
   <h3>$project</h3>
-  <div id=\"$project\"></div>
+  <table>
+    <div id=\"${project}_project\"></div>
+  </table>
   <h3>timeline</h3>
-  <div id=\"$project\"></div>
+  <table>
+    <div id=\"${project}_timeline\"></div>
+  </table>
 "
 
 job_page="
   <h2>$script</h2>
   <p></p>
   <h3>timeline</h3>
-  <div id=\"$script\"></div>
+  <table>
+    <div id=\"${project}-${script}_timeline\"></div>
+  </table>
 "
 
 ### tables
