@@ -153,6 +153,7 @@ function upgrade() {
 
 ### page creation ###
 function create_croni_page() {
+
 	source "$submodule_base/webroot/templates"
 	create_page "croni_projects" "croni_projects" \
 		"croni_timeline" "croni_timeline" \
