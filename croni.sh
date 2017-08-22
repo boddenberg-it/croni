@@ -5,10 +5,10 @@ function log() {
 	file="$base/logs/croni.log"
 
 	if [ ! -f "$file" ]; then
-		echo "<pre>[$(date)] $1 </pre>" > "$file"
+		echo "<pre>$1 [$(date)]</pre>" > "$file"
 	else
 		# append at the beginning
-		sed -i "1i<pre>[$(date)] $1 </pre>" "$file"
+		sed -i "1i<pre>$1 [$(date)]</pre>" "$file"
 	fi
 }
 
