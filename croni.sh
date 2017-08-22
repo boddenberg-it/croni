@@ -196,7 +196,16 @@ function upgrade() {
 	update_croni_table
 }
 
+update_nav_bar() {
+	# update navbar
+	rm "$base/croni_logs/runtime/navbar" || true
+	for p in $(ls "$base/croni_jobs"); do
+		echo "<li><a href=\"$p.html\">$p</a></li>" >> "$base/croni_logs/runtime/navbar"
+	done
+}
+
 update_croni_table(){
+
 	croni_revision=$(revision croni)
 	revision=$(revision)
 
@@ -241,12 +250,6 @@ function update() {
 	echo "${new_head:0:7}" > $submodule_base/webroot/logs/runtime/revision
 	echo "$(date +%H:%m:%S\ %d.%m.%y)" > $submodule_base/webroot/logs/runtime/last_update
 	echo "$update_expression" > $submodule_base/webroot/logs/runtime/update_interval
-
-	# update navbar
-	rm "$base/croni_logs/runtime/navbar" || true
-	for p in $(ls "$base/croni_jobs"); do
-		echo "<li><a href=\"$p.html\">$p</a></li>" >> "$base/croni_logs/runtime/navbar"
-	done
 
 	if [ "$new_head" != "$old_head" ]; then
 		log "update call: changes found -> deploying jobs"
