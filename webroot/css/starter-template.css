@@ -12,14 +12,15 @@ a,a:hover,a:focus {
   text-decoration: underline;
 }
 
+table { width: 100%;}
+
 /* table coloring for better readability */
 tr:nth-child(even) {background: #FFF}
 tr:nth-child(odd) {background: #EEE}
-tr:first-child {background: #CCC}
 
-table {
-	width: 100%; 
-	border="1";
+td {
+	border: 1px;
+	border-style: double;
 }
 
 /* croni bootstrap changes for build log modal */
@@ -35,5 +36,5 @@ table {
 pre {
   background-color: black;
   color: white;
-  margin: 0px;
+  margin: 0;
 }
