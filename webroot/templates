@@ -88,8 +88,7 @@ landing_page="
   <br>
   <br>
   <div id=\"croni_table\"></div>
-  <h3>projects</h3>
-  <table id=\"croni_project\"></table>
+  $project_tables
   <h3>timeline</h3>
   <table id=\"croni_timeline\"></table>
 "
@@ -97,7 +96,6 @@ landing_page="
 project_page="
   <h2>$project</h2>
   <p></p>
-  <h3>$project</h3>
   <table id=\"${project}_project\"></table>
   <h3>timeline</h3>
   <table id=\"${project}_timeline\"></table>
@@ -107,7 +105,7 @@ job_page="
   <h2>$script</h2>
   <p></p>
   <h3>timeline</h3>
-  <table id=\"${project}-${script}_timeline\"></table>
+  <table id=\"${project}-${script_no_ext}_timeline\"></table>
 "
 
 ### tables
@@ -140,30 +138,13 @@ croni_table_template="<table>
 </table>
 "
 
-project_script_header_template="<tr>
-                <td><b>project||script</b></td>
-                <td><b>usage</b></td>
-                <td><b>health</b></td>
-            </tr>
-"
-
-projects_scripts_item_template="<tr>
-                <td><a href=\"${item}.html\">$item</a></td>
-                <td>$usage</td>
+script_item_template="<tr>
+                <td><a href=\"${page}.html\">$name</a></td>
                 <td>$state</td>
         </tr>
 "
 
-timeline_header_template="<tr>
-    <td><b>date</b></td>
-    <td><b>$project_or_script</b></td>
-    <td><b>number</b></td>
-    <td><b>duration</b></td>
-    <td><b>result</b></td>
-  </tr>
-"
-
-timeline_item_start_template="<tr>
+timeline_item_template="<tr>
     <td>$date</td>
     <td><a href=\"$item_path\">${item}.sh</a></td>
     <td><a href=\"javascript:show_console_log(\'$log_path\');\">$build_number</a></a></td>

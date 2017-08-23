@@ -48,6 +48,25 @@ function init() {
 	fi
 }
 
+
+# called everytime a job finishes within this project
+update_project_table() {
+	project="$1"
+	jobs="$(ls "$base/croni_jobs/$project")"
+	# clean up
+	rm "$base/logs/.runtime/${project}_project" || true
+
+	for job in $jobs; do
+		job_no_ext="${job//.sh/}"
+		state="$(cat "$base/logs/$1/${job_no_ext}.last_build")"
+		job=${job//.sh/}
+		page="${project}-${job}"
+		name="$job"
+		source "$templates"
+		echo "$script_item_template" >> "$base/logs/.runtime/${project}_project"
+	done
+}
+
 function deploy() {
 
 	update_navbar
@@ -72,6 +91,7 @@ function deploy() {
 			deploy_job "$project" "$job"
 		done
 
+		update_project_table "$project"
 	done
 
 	# deploy new crontab if changes have been introduced
@@ -86,7 +106,6 @@ function deploy() {
 		log "deploy call: Nothing changed, nothing added."
 	fi
 }
-
 
 # updating job repository
 function update() {
@@ -155,7 +174,9 @@ function create_page() {
 	# obtain page name
 	page=""
 	if [ "$#" -gt 2 ]; then
-		page="$1-$3"
+		script="$3"
+		script_no_ext="${script//.sh/}"
+		page="$1-${script_no_ext}"
 	else
 		page="$1"
 	fi
@@ -185,7 +206,7 @@ function create_project_page() {
 function create_job_page() {
 	project="$1"
 	script="$2"
-	page="$1-$2"
+	script_no_ext="${script//.sh/}"
 	source "$templates"
 	create_page "$project" "$job_page" "$script"
 }
@@ -209,6 +230,17 @@ function job_value() {
 }
 
 function deploy_job() {
+
+	# ensure logs folder exists
+	job_logs="$base/logs/$1/$2"
+	job_logs="${job_logs//.sh/}"
+	mkdir -p "$job_logs"
+
+	# create .last_build file
+	if [ ! -f "${job_logs}.last_build" ]; then
+		echo "initialised" > "${job_logs}.last_build"
+	fi
+
 	croni="$(job_value "$1" "$2" "croni")"
 	if [ "$croni" = "" ]; then
 		log "[ERROR] No cron_expression declared in $base/jobs/$1/$2"
@@ -216,11 +248,6 @@ function deploy_job() {
 	else
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
-
-	# ensure logs folder exists
-	job_logs="$base/logs/$1/$2"
-	job_logs="${job_logs//.sh/}"
-	mkdir -p "$job_logs"
 }
 
 ### ###
