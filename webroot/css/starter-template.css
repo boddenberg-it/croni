@@ -37,4 +37,7 @@ pre {
   background-color: black;
   color: white;
   margin: 0;
+  border: 0px;
+  border-radius: 0px;
+  padding: 1.5px;
 }
