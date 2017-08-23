@@ -332,7 +332,12 @@ function run() {
 
 	echo "[INFO] Build result: $result </pre>" >> "$job_log"
 	log "Build $project/$job took ${duration}s, result: $result; $reason"
+
+	# updating front end
+	job_no_ext=${job//.sh/}
+	echo "$result" > "$base/logs/$1/${job_no_ext}.last_build"
 	add_job_to_timelines $project $job $result $next_bn $duration
+	update_project_table "$project"
 }
 
 add_job_to_timelines() {
