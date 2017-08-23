@@ -33,8 +33,8 @@ page_start="<!DOCTYPE html>
       }
       \$(function() { \$(\"#includeNavbar\").load(\"logs/.runtime/navbar\");  });
       \$(function() { \$(\"#croni_table\").load(\"logs/.runtime/croni_table\");  });
-      \$(function() { \$(\"#${first_include}\").load(\"${path_first_include}\");  });
-      \$(function() { \$(\"#${second_include}\").load(\"${path_second_include}\");  });
+      \$(function() { \$(\"#${page}_project\").load(\"logs/.runtime/${page}_project\");  });
+      \$(function() { \$(\"#${page}_timeline\").load(\"logs/.runtime/${page}_timeline\");  });
     </script>
   </head>
   <body>
@@ -89,35 +89,25 @@ landing_page="
   <br>
   <div id=\"croni_table\"></div>
   <h3>projects</h3>
-  <table>
-    <div id=\"croni_projects\"></div>
-  </table>
+  <table id=\"croni_project\"></table>
   <h3>timeline</h3>
-  <table>
-    <div id=\"croni_timeline\"></div>
-  </table>
+  <table id=\"croni_timeline\"></table>
 "
 
 project_page="
   <h2>$project</h2>
   <p></p>
   <h3>$project</h3>
-  <table>
-    <div id=\"${project}_project\"></div>
-  </table>
+  <table id=\"${project}_project\"></table>
   <h3>timeline</h3>
-  <table>
-    <div id=\"${project}_timeline\"></div>
-  </table>
+  <table id=\"${project}_timeline\"></table>
 "
 
 job_page="
   <h2>$script</h2>
   <p></p>
   <h3>timeline</h3>
-  <table>
-    <div id=\"${project}-${script}_timeline\"></div>
-  </table>
+  <table id=\"${project}-${script}_timeline\"></table>
 "
 
 ### tables
