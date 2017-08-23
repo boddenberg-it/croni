@@ -314,7 +314,6 @@ function run() {
 	if [ "$exit_code" -gt 0 ]; then
 		if [ "$exit_code" -eq 124 ]; then
 			result="TIMEOUT"
-			mv "$job_log" "${job_log}.log"
 		else
 			# failure let's try to parse the error from script
 			reason="unknown"
