@@ -190,6 +190,19 @@ function upgrade() {
 	update_croni_table
 }
 
+function cleanup_timeline() {
+	timeline_name="$1"
+	lines="$2"
+	cat "${timeline_name}_timeline" | head -$lines > "${timeline_name}_timeline.tmp"
+	mv "${timeline_name}_timeline.tmp" "${timeline_name}_timeline"
+}
+
+function cleanup_timelines() {
+	cleanup_timeline "$2" "$default_build_rotation"
+	cleanup_timeline "$1-$2" "$default_build_rotation"
+	cleanup_timeline "croni" "$((default_build_rotation*2))"
+}
+
 ### page creation ###
 function create_page() {
 
