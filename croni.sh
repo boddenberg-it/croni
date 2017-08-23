@@ -1,10 +1,6 @@
 #!/bin/bash
 
-function log() {
-	file="$base/logs/croni.log"
-	write_to_file "$file" "\<pre\>$1 [$(date)]\</pre\>"
-}
-
+# helper
 function write_to_file() {
 	file="$1"
 	msg="$2"
@@ -16,6 +12,11 @@ function write_to_file() {
 		sed -i "1i${msg}" "$file"
 	fi
 }
+function log() {
+	file="$base/logs/croni.log"
+	write_to_file "$file" "\<pre\>[$(date +%H:%m:%S\ %d.%m.%y)] $1\</pre\>"
+}
+
 
 ### CLI commands ###
 function init() {
@@ -331,7 +332,7 @@ function run() {
 	fi
 
 	echo "[INFO] Build result: $result </pre>" >> "$job_log"
-	log "Build $project/$job took ${duration}s, result: $result; $reason"
+	log "Build $project/$job # $next_bn took ${duration}s, result: $result $reason"
 
 	# updating front end
 	job_no_ext=${job//.sh/}
