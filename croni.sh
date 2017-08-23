@@ -97,8 +97,8 @@ function deploy() {
 		echo "$croni_update_expression $submodule_base/croni.sh upgrade" >> $new_crontab
 	fi
 
-	if [ "$croni_server_check" != "" ]; then
-		echo "$croni_server_check $submodule_base/croni.sh start-server" >> $new_crontab
+	if [ "$croni_server_check_expression" != "" ]; then
+		echo "$croni_server_check_expression $submodule_base/croni.sh start-server" >> $new_crontab
 	fi
 
 	echo "" >> $new_crontab
@@ -119,10 +119,10 @@ function deploy() {
 	# deploy new crontab if changes have been introduced
 	diff="$(diff "$old_crontab" "$new_crontab")"
 	if [ $? -gt 0 ]; then
-		log "Job/script changes have been fetched... successful update!"
 		cp "$new_crontab" "$old_crontab"
 		crontab "$old_crontab"
 		/etc/init.d/cron reload
+		log "deploy call: job/script changes have been fetched... successful update!"
 	else
 		log "deploy call: Nothing changed, nothing added."
 	fi
