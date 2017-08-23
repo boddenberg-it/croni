@@ -251,9 +251,20 @@ function deploy_job() {
 }
 
 ### ###
+
+# allow user to test jobs on disabled instances
+function test() {
+	croni_run=true
+	run $@
+}
+
 function run() {
-	# ~/.croni config
-	if [ ! $croni_run ]; then exit 0; fi
+
+	if [ "$croni_run" = "false" ]; then
+		echo
+		echo "[ERROR] croni is currently disabled... try 'test' instead."
+		exit 0;
+	fi
 
 	project="$1"
 	job="$2"
@@ -318,7 +329,7 @@ function run() {
 		mv "$job_log" "${job_log}_OK.log"
 	fi
 
-	# add to lists, call :D
+	#add_job_to_timelines
 }
 
 # UPDATE & UPGRADE
