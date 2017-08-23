@@ -149,25 +149,21 @@ function upgrade() {
 	update_croni_table
 }
 
-
-
-
-
 ### page creation ###
 function create_page() {
 
+	# obtain page name
+	page=""
+	if [ "$#" -gt 2 ]; then
+		page="$1-$3"
+	else
+		page="$1"
+	fi
+
+	dest="$submodule_base/webroot/${page}.html"
 	source "$templates"
 
-	if [ ! "$3 " = "" ]; then
-		dest="$submodule_base/webroot/$1.html"
-	else
-		dest="$submodule_base/webroot/$3-$1.html"
-	fi
-	first_include="$1_project"
-	path_first_include="$submodule_base/webroot/logs/.runtime/$1_project"
-	second_include="$1_timeline"
-	path_second_include="$submodule_base/webroot/logs/.runtime/$1_timeline"
-
+	# create page
 	echo "$page_start" > "$dest"
 	echo "$2" >> "$dest"
 	echo "$page_end" >> "$dest"
@@ -181,6 +177,7 @@ function create_croni_page() {
 
 function create_project_page() {
 	project="$1"
+	page="$1"
 	source "$templates"
 	create_page "$project" "$project_page"
 }
@@ -188,8 +185,9 @@ function create_project_page() {
 function create_job_page() {
 	project="$1"
 	script="$2"
+	page="$1-$2"
 	source "$templates"
-	create_page "$script" "$job_page" "$project"
+	create_page "$project" "$job_page" "$script"
 }
 
 
