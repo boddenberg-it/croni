@@ -19,6 +19,14 @@ function log() {
 
 
 ### CLI commands ###
+function start_server() {
+	is_online="$(ps a | grep "python -m SimpleHTTPServer $croni_port" | head -1 | cut -d ' ' -f2 | wc -l)"
+	if [ "$is_online" = "1" ]; then
+		cd "$submodule_base/webroot"
+		python -m SimpleHTTPServer "$croni_port" > "$base/logs/server.log" 2>&1 &
+	fi
+}
+
 function init() {
 
 	mkdir -p $submodule_base/webroot/logs/.runtime
@@ -83,11 +91,17 @@ function deploy() {
 	new_crontab="$base/.cronitab_new"
 
 	echo "$update_expression $submodule_base/croni.sh update" > $new_crontab
+	echo "@reboot $submodule_base/croni.sh start-server" >> $new_crontab
 
 	if [ "$croni_update_expression" != "" ]; then
 		echo "$croni_update_expression $submodule_base/croni.sh upgrade" >> $new_crontab
 	fi
 
+	if [ "$croni_server_check" != "" ]; then
+		echo "$croni_server_check $submodule_base/croni.sh start-server" >> $new_crontab
+	fi
+
+	echo "" >> $new_crontab
 	projects="$(ls "$base/croni_jobs")"
 	for project in $projects; do
 
@@ -109,10 +123,10 @@ function deploy() {
 		cp "$new_crontab" "$old_crontab"
 		crontab "$old_crontab"
 		/etc/init.d/cron reload
-		rm "$new_crontab" # clean up
 	else
 		log "deploy call: Nothing changed, nothing added."
 	fi
+	rm "$new_crontab"
 }
 
 # updating job repository
