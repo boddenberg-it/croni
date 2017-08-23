@@ -246,7 +246,7 @@ function deploy_job() {
 
 	# create .last_build file
 	if [ ! -f "${job_logs}.last_build" ]; then
-		echo "INITIALISED" > "${job_logs}.last_build"
+		echo "NOT RUN YET" > "${job_logs}.last_build"
 	fi
 
 	croni="$(job_value "$1" "$2" "croni")"
@@ -353,7 +353,7 @@ add_job_to_timelines() {
 	 item_path="${project}-${job}.html"
 	 log_path="logs/$project/$job/${job}_${build_number}.log"
 	 log_path="${log_path//.sh/}"
-	 # todo?: workspace path
+	 workspace_path="/logs/$project/$job/workspaces/${build_number}/"
 
 	 source $templates
 	 write_to_file "$base/logs/.runtime/croni_timeline" "$timeline_item_template"

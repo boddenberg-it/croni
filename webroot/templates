@@ -144,4 +144,4 @@ croni_table_template="<table>
 project_table_header="<tr><td><b>job</b></td><td><b>health</b></td></tr>"
 script_item_template="<tr><td><a href=\"${page}.html\">$name</a></td><td>$state</td></tr>"
 
-timeline_item_template="<tr><td>$result</td><td><a href=\"javascript:show_console_log(\'$log_path\');\"># $build_number</a></a></td><td><a href=\"$item_path\">${item}</a></td><td>$duration s</td><td>$date</td></tr>"
+timeline_item_template="<tr><td>$result</td><td><a href=\"javascript:show_console_log(\'$log_path\');\"># $build_number</a></td><td><a href=\"$item_path\">${item}</a></td><td><a href=\"$workspace_path\">$duration s</a></td><td>$date</td></tr>"
