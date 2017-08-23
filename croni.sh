@@ -70,6 +70,8 @@ update_project_table() {
 		source "$templates"
 		echo "$script_item_template" >> "$base/logs/.runtime/${project}_project"
 	done
+	source "$templates"
+	write_to_file "$base/logs/.runtime/${project}_project" "$project_table_header"
 }
 
 function deploy() {
@@ -243,7 +245,7 @@ function deploy_job() {
 
 	# create .last_build file
 	if [ ! -f "${job_logs}.last_build" ]; then
-		echo "initialised" > "${job_logs}.last_build"
+		echo "INITIALISED" > "${job_logs}.last_build"
 	fi
 
 	croni="$(job_value "$1" "$2" "croni")"
@@ -254,8 +256,6 @@ function deploy_job() {
 		echo "$croni $submodule_base/croni.sh run $1 $2" >> $new_crontab
 	fi
 }
-
-### ###
 
 # allow user to test jobs on disabled instances
 function test() {
@@ -298,7 +298,7 @@ function run() {
 
 	# triggering script with timeout trap
 	date="$(date +%y-%m-%d_%H:%m:%S)"
-	echo "<pre>[INFO] Build $1/$2 triggered at $date" >> "$job_log"
+	echo "<pre>[INFO] Build $1/$2 #${next_bn} triggered at $date" >> "$job_log"
 	start=$(date +%s)
 	# FYI: exit code is 124 in case of a timeout
 	timeout "$timeout" "$script" >> "$job_log" 2>&1
@@ -336,7 +336,7 @@ function run() {
 	# updating front end
 	job_no_ext=${job//.sh/}
 	echo "$result" > "$base/logs/$1/${job_no_ext}.last_build"
-	add_job_to_timelines $project $job $result $next_bn $duration
+	add_job_to_timelines "$project" "$job" "$result" "$next_bn" "$duration"
 	update_project_table "$project"
 }
 
@@ -362,7 +362,6 @@ add_job_to_timelines() {
 	 write_to_file "$base/logs/.runtime/${project}_timeline" "$timeline_item_template"
 	 write_to_file "$base/logs/.runtime/${project}-${job}_timeline" "$timeline_item_template"
 }
-
 
 # UPDATE & UPGRADE
 function revision() {

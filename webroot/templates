@@ -83,6 +83,7 @@ page_end="
 ### sub templates using page_{start,end}
 
 landing_page="
+  <br>
   <h2><a href=\"javascript:show_console_log('logs/croni.log');\">welcome to croni</a></h2>
   <a href=\"https://git.boddenberg.it/croni\" target=\"_blank\">https://git.boddenberg.it/croni</a>
   <br>
@@ -94,6 +95,7 @@ landing_page="
 "
 
 project_page="
+  <br>
   <h2>$project</h2>
   <p></p>
   <table id=\"${project}_project\"></table>
@@ -103,6 +105,7 @@ project_page="
 "
 
 job_page="
+  <br>
   <h2>$script</h2>
   <p></p>
   <table id=\"${project}-${script_no_ext}_timeline\"></table>
@@ -138,6 +141,7 @@ croni_table_template="<table>
 </table>
 "
 
+project_table_header="<tr><td><b>job</b></td><td><b>health</b></td></tr>"
 script_item_template="<tr><td><a href=\"${page}.html\">$name</a></td><td>$state</td></tr>"
 
-timeline_item_template="<tr><td>$date</td><td><a href=\"$item_path\">${item}</a></td><td><a href=\"javascript:show_console_log(\'$log_path\');\"># $build_number</a></a></td><td>$duration s</td><td>$result</td></tr>"
+timeline_item_template="<tr><td>$result</td><td><a href=\"javascript:show_console_log(\'$log_path\');\"># $build_number</a></a></td><td><a href=\"$item_path\">${item}</a></td><td>$duration s</td><td>$date</td></tr>"
