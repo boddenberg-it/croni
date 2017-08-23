@@ -190,38 +190,6 @@ function upgrade() {
 	update_croni_table
 }
 
-function cleanup_timeline() {
-	timeline_name="$1"
-	lines="$2"
-	cat "${timeline_name}_timeline" | head -$lines > "${timeline_name}_timeline.tmp"
-	mv "${timeline_name}_timeline.tmp" "${timeline_name}_timeline"
-}
-
-function cleanup_timelines() {
-	cleanup_timeline "$2" "$default_build_rotation"
-	cleanup_timeline "$1-$2" "$default_build_rotation"
-	cleanup_timeline "croni" "$((default_build_rotation*2))"
-}
-
-job_cleanup() {
-	project="$1"
-	job="$2"
-
-	number="$3"
-	number="$((number-default_build_rotation))"
-	while [ -f "$base/logs/$project/$job/${job}_${number}.log" ]; do
-		rm "$base/logs/$project/$job/${job}_${number}.log"
-		number=$((number-1))
-	done
-
-	number="$3"
-	number="$((number-default_workspace_rotation))"
-	while [ -d "$base/logs/$project/$job/workspaces/$number" ]; do
-		rm -rf "$base/logs/$project/$job/workspace_path/$number"
-		number=$((number-1))
-	done
-}
-
 ### page creation ###
 function create_page() {
 
@@ -263,6 +231,21 @@ function create_job_page() {
 	script_no_ext="${script//.sh/}"
 	source "$templates"
 	create_page "$project" "$job_page" "$script"
+}
+
+# TODO: add cleanup after each job run checking job stuff, projects stuff, croni_timeline (x2). That's it. simply pipe it real good :D
+
+cleanup_timeline() {
+	timeline_name="$1"
+	lines="$2"
+	cat "${timeline_name}_timeline" | head -$lines > "${timeline_name}_timeline.tmp"
+	mv "${timeline_name}_timeline.tmp" "${timeline_name}_timeline"
+}
+
+cleanup_timelines() {
+	cleanup_timeline "$2" "$default_build_rotation"
+	cleanup_timeline "$1-$2" "$default_build_rotation"
+	cleanup_timeline "croni" "$((default_build_rotation*2))"
 }
 
 
@@ -379,11 +362,13 @@ function run() {
 	echo "[INFO] Build result: $result </pre>" >> "$job_log"
 	log "Build $project/$job # $next_bn took ${duration}s, result: $result $reason"
 
-	# updating front end
+	# updating front end + cleanup
 	job_no_ext=${job//.sh/}
 	echo "$result" > "$base/logs/$1/${job_no_ext}.last_build"
 	add_job_to_timelines "$project" "$job" "$result" "$next_bn" "$duration"
+	cleanup_timelines "$project" "$job"
 	update_project_table "$project"
+	job_cleanup "$project" "$job" "$next_bn"
 }
 
 add_job_to_timelines() {
@@ -415,12 +400,31 @@ function revision() {
 	echo "$(git rev-parse HEAD)"
 }
 
+job_cleanup() {
+	project="$1"
+	job="$2"
+
+	number="$3"
+	number="$((number-default_build_rotation))"
+	while [ -f "$base/logs/$project/$job/${job}_${number}.log" ]; do
+		rm "$base/logs/$project/$job/${job}_${number}.log"
+		number=$((number-1))
+	done
+
+	number="$3"
+	number="$((number-default_workspace_rotation))"
+	while [ -f "$base/logs/$project/$job/workspaces/$number" ]; do
+		rm -rf "$base/logs/$project/$job/workspace_path/$number"
+		number=$((number-1))
+	done
+}
+
 # update static navbar and croni-table
 update_navbar() {
 	# update navbar
 	rm "$base/logs/.runtime/navbar" || true
 	for p in $(ls "$base/croni_jobs"); do
-		echo "<li><a href=\"$p.html\">$p</a></li>" >> "$base/logs/.runtime/navbar"
+		echo "<li><a class="croni_navbar" href=\"$p.html\">$p</a></li>" >> "$base/logs/.runtime/navbar"
 	done
 }
 
