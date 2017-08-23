@@ -1,14 +1,19 @@
 #!/bin/bash
 
 function log() {
-
 	file="$base/logs/croni.log"
+	write_to_file "$file" "\<pre\>$1 [$(date)]\</pre\>"
+}
+
+function write_to_file() {
+	file="$1"
+	msg="$2"
 
 	if [ ! -f "$file" ]; then
-		echo "<pre>$1 [$(date)]</pre>" > "$file"
+		echo "$msg" > "$file"
 	else
 		# append at the beginning
-		sed -i "1i<pre>$1 [$(date)]</pre>" "$file"
+		sed -i "1i${msg}" "$file"
 	fi
 }
 
@@ -272,7 +277,6 @@ function run() {
 	job_dir="$base/logs/$project/$job"
 	job_dir="${job_dir//.sh/}"
 
-	### run preparations
 	# obtain build number
 	if [ ! -f "$job_dir/latest_build_number" ]; then
 		echo "-1" > "$job_dir/latest_build_number"
@@ -280,10 +284,11 @@ function run() {
 	current_bn="$(cat $job_dir/latest_build_number)"
 	next_bn="$((current_bn+1))"
 	echo "$next_bn" > "$job_dir/latest_build_number"
+
 	# obtain log file
-	date="$(date +%y-%m-%d_%H:%m:%S)"
-	log "Starting build: $project/$job number: $next_bn"
-	job_log="$job_dir/${job}_${next_bn}"
+	job_log="$job_dir/${job}_${next_bn}.log"
+	job_log="${job_log//.sh/}"
+
 	# create workspace
 	mkdir -p "$job_dir/workspaces/${next_bn}/"
 	cd "$job_dir/workspaces/${next_bn}/" || exit
@@ -292,7 +297,8 @@ function run() {
 	script="$base/croni_jobs/$project/$job"
 
 	# triggering script with timeout trap
-	echo "[INFO] Build started at $date" >> "$job_log"
+	date="$(date +%y-%m-%d_%H:%m:%S)"
+	echo "<pre>[INFO] Build $1/$2 triggered at $date" >> "$job_log"
 	start=$(date +%s)
 	# FYI: exit code is 124 in case of a timeout
 	timeout "$timeout" "$script" >> "$job_log" 2>&1
@@ -302,35 +308,54 @@ function run() {
 	echo "" >> "$job_log"
 	echo "[INFO] Build took: $duration s" >> "$job_log"
 
+	result=""
 	# exit code evaluation
 	if [ "$exit_code" -gt 0 ]; then
-		# timeout
 		if [ "$exit_code" -eq 124 ]; then
-			log "Build TIMEOUT: $1/$2 number: $next_bn duration: $duration"
-			echo "[INFO] Timeout" >> "$job_log"
-			mv "$job_log" "${job_log}_TIMEOUT_${duration}.log"
+			result="TIMEOUT"
+			mv "$job_log" "${job_log}.log"
 		else
 			# failure let's try to parse the error from script
 			reason="unknown"
 			parsed_reason="$(job_value "$project" "$job" "reason_${exit_code}")"
-
 			if [ "$parsed_reason" != "" ]; then
 				reason="$parsed_reason"
+				echo "[INFO] Noted failure reason: $reason" >> "$job_log"
+				result="KNOWN FAIL"
+			else
+				result="FAIL"
 			fi
-
-			log "Build FAIL: $1/$2 number: $next_bn duration: $duration reason: $reason"
-			echo "[INFO] Failure, reason_${exit_code}: $reason" >> "$job_log"
-			mv "$job_log" "${job_log}_${exit_code}_FAIL.log"
 		fi
 	else
-		# success
-		log "Build OK: $1/$2 number: $next_bn duration: $duration"
-		echo "[INFO] Success" >> "$job_log"
-		mv "$job_log" "${job_log}_OK.log"
+		result="OK"
 	fi
 
-	#add_job_to_timelines
+	echo "[INFO] Build result: $result </pre>" >> "$job_log"
+	log "Build $project/$job took ${duration}s, result: $result; $reason"
+	add_job_to_timelines $project $job $result $next_bn $duration
 }
+
+add_job_to_timelines() {
+	 project="$1"
+	 job="$2"
+	 result="$3"
+	 build_number="$4"
+	 duration="$5"
+
+	 date="$(date +%H:%m:%S\ -\ %d.%m.%y)"
+	 item="$job"
+	 item_path="${project}-${script}.html"
+	 log_path="logs/$project/$job/${job}_${build_number}.log"
+	 log_path="${log_path//.sh/}"
+	 # todo?: workspace path
+
+	 job="${job//.sh/}"
+	 source $templates
+	 write_to_file "$base/logs/.runtime/croni_timeline" "$timeline_item_template"
+	 write_to_file "$base/logs/.runtime/${project}_timeline" "$timeline_item_template"
+	 write_to_file "$base/logs/.runtime/${project}-${job}_timeline" "$timeline_item_template"
+}
+
 
 # UPDATE & UPGRADE
 function revision() {
