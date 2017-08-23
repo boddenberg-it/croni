@@ -342,16 +342,18 @@ add_job_to_timelines() {
 	 build_number="$4"
 	 duration="$5"
 
+	 job="${job//.sh/}"
 	 date="$(date +%H:%m:%S\ -\ %d.%m.%y)"
-	 item="$job"
-	 item_path="${project}-${script}.html"
+	 item="$project - $job"
+	 item_path="${project}-${job}.html"
 	 log_path="logs/$project/$job/${job}_${build_number}.log"
 	 log_path="${log_path//.sh/}"
 	 # todo?: workspace path
 
-	 job="${job//.sh/}"
 	 source $templates
 	 write_to_file "$base/logs/.runtime/croni_timeline" "$timeline_item_template"
+	 item="$job"
+	 source $templates
 	 write_to_file "$base/logs/.runtime/${project}_timeline" "$timeline_item_template"
 	 write_to_file "$base/logs/.runtime/${project}-${job}_timeline" "$timeline_item_template"
 }
