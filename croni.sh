@@ -203,6 +203,25 @@ function cleanup_timelines() {
 	cleanup_timeline "croni" "$((default_build_rotation*2))"
 }
 
+job_cleanup() {
+	project="$1"
+	job="$2"
+
+	number="$3"
+	number="$((number-default_build_rotation))"
+	while [ -f "$base/logs/$project/$job/${job}_${number}.log" ]; do
+		rm "$base/logs/$project/$job/${job}_${number}.log"
+		number=$((number-1))
+	done
+
+	number="$3"
+	number="$((number-default_workspace_rotation))"
+	while [ -d "$base/logs/$project/$job/workspaces/$number" ]; do
+		rm -rf "$base/logs/$project/$job/workspace_path/$number"
+		number=$((number-1))
+	done
+}
+
 ### page creation ###
 function create_page() {
 
