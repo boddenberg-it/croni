@@ -33,6 +33,16 @@ td {
    width: 85%;
 }
 
+/* for navbar */
+#white {
+  color: white;
+}
+
+a.croni_navbar {
+  text-decoration: none;
+}
+
+/* for consol'ish log style */
 pre {
   background-color: black;
   color: white;
