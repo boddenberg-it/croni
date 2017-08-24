@@ -2,7 +2,7 @@ body {
   padding-top: 2%;
 }
 
-.starter-template {
+.croni {
   padding: 2%;
   text-align: center;
 }
@@ -19,8 +19,8 @@ tr:nth-child(even) {background: #FFF}
 tr:nth-child(odd) {background: #EEE}
 
 td {
-	border: 1px;
-	border-style: double;
+  border: 1px;
+  border-style: double;
 }
 
 /* croni bootstrap changes for build log modal */

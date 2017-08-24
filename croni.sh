@@ -455,7 +455,7 @@ update_croni_table(){
 # actual entry point
 submodule_base="$(dirname "$(readlink -f $0)")"
 base="${submodule_base:0:-5}"
-templates="$submodule_base/webroot/templates"
+templates="$submodule_base/webroot/templates.html"
 
 export base submodule_base templates
 
