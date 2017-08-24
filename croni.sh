@@ -238,8 +238,9 @@ function create_job_page() {
 cleanup_timeline() {
 	timeline_name="$1"
 	lines="$2"
-	cat "${timeline_name}_timeline" | head -$lines > "${timeline_name}_timeline.tmp"
-	mv "${timeline_name}_timeline.tmp" "${timeline_name}_timeline"
+	tl="$base/logs/.runtime/${timeline_name}_timeline"
+	cat "$tl" | head -$lines > "${tl}.tmp"
+	mv "${tl}.tmp" "$tl"
 }
 
 cleanup_timelines() {
