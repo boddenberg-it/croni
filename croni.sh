@@ -363,13 +363,16 @@ function run() {
 	echo "[INFO] Build result: $result </pre>" >> "$job_log"
 	log "Build $project/$job # $next_bn took ${duration}s, result: $result $reason"
 
-	# updating front end + cleanup
 	job_no_ext=${job//.sh/}
+
+	# rotate logs and workspaces
+	job_cleanup "$project" "$job_no_ext" "$next_bn"
+
+	# updating/cleanup front end
 	echo "$result" > "$base/logs/$1/${job_no_ext}.last_build"
 	add_job_to_timelines "$project" "$job" "$result" "$next_bn" "$duration"
 	cleanup_timelines "$project" "$job"
 	update_project_table "$project"
-	job_cleanup "$project" "$job" "$next_bn"
 }
 
 add_job_to_timelines() {
