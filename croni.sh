@@ -173,7 +173,6 @@ test () {
 run () {
 
 	if [ "$croni_run" = "false" ]; then
-		echo
 		echo "[ERROR] croni is currently disabled... try 'test' instead."
 		exit 0;
 	fi
@@ -243,7 +242,11 @@ run () {
 	fi
 
 	echo "[INFO] Build result: $result </pre>" >> "$job_log"
-	log "Build $project/$job # $next_bn took ${duration}s, result: $result $reason"
+
+	result_txt="Build $project/$job #$next_bn took ${duration}s, result: $result $reason"
+	log "$result_txt"
+	# echo results to output log in case of invokation from command line.
+	echo "$result_txt"
 
 	# rotate logs and workspaces
 	job_cleanup "$project" "$job" "$next_bn"
@@ -251,7 +254,6 @@ run () {
 	# updating/cleanup front end
 	echo "$result" > "$base/logs/$project/${job}.last_build"
 	add_job_to_timelines "$project" "$job" "$result" "$next_bn" "$duration"
-	echo "project passed to timelines: $project $job"
 	update_timelines "$project" "$job"
 	update_project_table "$project"
 }
@@ -329,7 +331,7 @@ create_job_page () {
 
 
 update_navbar () {
-	rm "$base/logs/.runtime/navbar" || true
+	rm "$base/logs/.runtime/navbar" > /dev/null 2>&1 || true
 
 	for p in $(ls "$base/jobs"); do
 		echo "<li><a class="croni_navbar" href=\"$p.html\">$p</a></li>" >> "$runtime/navbar"
@@ -361,7 +363,7 @@ update_croni_table () {
 update_project_table () {
 	project="$1"
 	jobs="$(ls "$base/jobs/$project")"
-	rm "$base/logs/.runtime/${project}_project" || true
+	rm "$base/logs/.runtime/${project}_project" > /dev/null 2>&1 || true
 
 	for job in $jobs; do
 		job="$(echo $job | cut -d '.' -f1)"
@@ -378,7 +380,6 @@ update_project_table () {
 
 update_timeline () {
 	timeline_name="$1"
-	echo "update_timeline $1_timeline"
 	tl="$base/logs/.runtime/${timeline_name}_timeline"
 	cat "$tl" | head -"$default_build_rotation" > "${tl}.tmp"
 	mv "${tl}.tmp" "$tl"
