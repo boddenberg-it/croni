@@ -69,7 +69,7 @@ deploy () {
 		for job_file in $jobs; do
 			job="$(echo $job_file | cut -d '.' -f1)"
 			create_job_page "$project" "$job"
-			deploy_job "$project" "$job" "$job_file"
+			deploy_job "$project" "$job" "$job_file" "$new_crontab"
 		done
 		update_project_table "$project"
 	done
@@ -91,6 +91,7 @@ deploy_job () {
 	project="$1"
 	job="$2"
 	job_file="$3"
+	new_crontab="$4"
 
 	# ensure logs folder exists
 	mkdir -p "$base/logs/$project/$job"
@@ -100,7 +101,7 @@ deploy_job () {
 	fi
 
 	croni_expression="$(job_value "$project" "$job_file" "croni")"
-	if [ ! -z ${croni_expression+x} ]; then
+	if [ "$croni_expression" = "" ]; then
 		log "[ERROR] Cannot deploy, no cron_expression declared in $base/jobs/$project/$job_file"
 	else
 		echo "$croni_expression $croni run $project $job_file" >> $new_crontab
@@ -200,16 +201,16 @@ run () {
 	job_log="$job_dir/${job}_${next_bn}.log"
 
 	# create workspace
-	mkdir -p "$job_dir/workspaces/${next_bn}/"
-	cd "$job_dir/workspaces/${next_bn}/" || exit
+	mkdir -p "$job_dir/workspaces/${next_bn}"
+	cd "$job_dir/workspaces/${next_bn}" || exit 1
 
 	# obtain timeout from job script
-	timeout="$(job_value "$project" "$job_file" "timeout")"
+	timeout="$(job_value "$project" "$job_file" "croni_timeout")"
 	script="$base/jobs/$project/$job_file"
 
 	# triggering job
 	date="$(date +%y-%m-%d_%H:%m:%S)"
-	echo "<pre>[INFO] Build $project/$job_file #${next_bn} triggered at $date" >> "$job_log"
+	echo "<pre>[INFO] Build $project/$job_file #${next_bn} triggered at $date" > "$job_log"
 	start=$(date +%s)
 	# exit code is 124 in case of a timeout
 	timeout "$timeout" "$script" >> "$job_log" 2>&1
@@ -227,7 +228,7 @@ run () {
 		else
 			# failure let's try to parse the error from script
 			reason="unknown"
-			parsed_reason="$(job_value "$project" "$job_file" "reason_${exit_code}")"
+			parsed_reason="$(job_value "$project" "$job_file" "croni_reason_${exit_code}")"
 			if [ "$parsed_reason" != "" ]; then
 				reason="$parsed_reason"
 				echo "[INFO] Noted failure reason: $reason" >> "$job_log"
@@ -268,7 +269,7 @@ job_cleanup () {
 
 	# clean up old log(s)
 	number="$3"
-	number="$((number - default_build_rotation))"
+	number="$((number - croni_build_rotation))"
 	while [ -f "$base/logs/$project/$job/${job}_${number}.log" ]; do
 		rm "$base/logs/$project/$job/${job}_${number}.log"
 		number=$((number-1))
@@ -276,7 +277,7 @@ job_cleanup () {
 
 	# clean up old workspace(s)
 	number="$3"
-	number="$((number - default_workspace_rotation))"
+	number="$((number - croni_workspace_rotation))"
 	while [ -d "$base/logs/$project/$job/workspaces/$number" ]; do
 		rm -rf "$base/logs/$project/$job/workspaces/$number"
 		number=$((number-1))
@@ -367,7 +368,7 @@ update_croni_table () {
 update_project_table () {
 	project="$1"
 	jobs="$(ls "$base/jobs/$project")"
-	rm "$base/logs/.runtime/${project}_project" > /dev/null 2>&1 || true
+	rm "$runtime/${project}_project" > /dev/null 2>&1 || true
 
 	for job in $jobs; do
 		job="$(echo $job | cut -d '.' -f1)"
@@ -379,13 +380,13 @@ update_project_table () {
 	done
 
 	. "$templates"
-	write_to_file "$base/logs/.runtime/${project}_project" "$project_table_header"
+	write_to_file "$runtime/${project}_project" "$project_table_header"
 }
 
 update_timeline () {
 	timeline_name="$1"
-	tl="$base/logs/.runtime/${timeline_name}_timeline"
-	cat "$tl" | head -"$default_build_rotation" > "${tl}.tmp"
+	tl="$runtime/${timeline_name}_timeline"
+	cat "$tl" | head -"$croni_build_rotation" > "${tl}.tmp"
 	mv "${tl}.tmp" "$tl"
 }
 
@@ -414,8 +415,8 @@ add_job_to_timelines () {
 	 # only job name for project and job page
 	 item="$job"
 	 . "$templates"
-	 write_to_file "$runtime/${project}_timeline" "$timeline_item_template"
 	 write_to_file "$runtime/${project}-${job}_timeline" "$timeline_item_template"
+	 write_to_file "$runtime/${project}_timeline" "$timeline_item_template"
 }
 
 # HELPERS
