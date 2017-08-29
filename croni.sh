@@ -53,7 +53,7 @@ deploy () {
 	new_crontab="$base/.cronitab_new"
 
 	# create job unrelated cronjobs to update and ensure HTTPS server is listening
-	echo "$update_expression $croni update" > $new_crontab
+	echo "$croni_update_expression $croni update" > $new_crontab
 	echo "@reboot $croni start_server" >> $new_crontab
 	if [ "$croni_server_check_expression" != "" ]; then
 		echo "$croni_server_check_expression $croni start_server" >> $new_crontab
@@ -100,7 +100,7 @@ deploy_job () {
 	fi
 
 	croni_expression="$(job_value "$project" "$job_file" "croni")"
-	if [ "$croni" = "" ]; then
+	if [ ! -z ${croni_expression+x} ]; then
 		log "[ERROR] Cannot deploy, no cron_expression declared in $base/jobs/$project/$job_file"
 	else
 		echo "$croni_expression $croni run $project $job_file" >> $new_crontab
@@ -236,6 +236,10 @@ run () {
 			else
 				result="FAIL"
 			fi
+		fi
+		if [ "$croni_send_mail" = "true" ]; then
+			rcpt="$(job_value "$project" "$job_file" "$croni_mail_recipients")"
+			sendmail "$rcpt" "[croni] build $project/$job -> $result; $parsed_reason" "$(cat $job_log)"
 		fi
 	else
 		result="OK"
@@ -423,7 +427,7 @@ revision () {
 # parsing job value from job file or using default value of ~/.croni
 job_value () {
 	job_var="$(cat "$base/jobs/$1/$2" | grep "$3\=" | cut -d "\"" -f2)"
-	if [ "$job_var" = "" ]; then
+	if [ ! -n "$job_var" ]; then
 		default="default_$3"
 		default="echo \$$default"
 		default=$(eval $default)
