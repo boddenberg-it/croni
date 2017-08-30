@@ -1,8 +1,8 @@
 ## Why?
 
 Croni shall help persons and small teams, who are having the need for a CI server, which at least runs daily/hourly. But don't want to setup and maintain a fully blown CI setup like Jenkins, Travis CI, Bamboo, et cetera.
-
 <br>
+
 ## What functionalities does croni provide?
 
 Basically, croni adds a front end to cron for better overview and forces one to put each cronjob in a repository.
@@ -29,8 +29,8 @@ Dependencies:
 
 * shell (timeout command must be available)
 * python < 3 (for HTTP server only)
-
 <br>
+
 ## Give it a try!
 
 First, <b>back up</b> your crontab it will replaced.
@@ -107,8 +107,8 @@ $base/scripts/example_script.sh "foo" "bar"
 ```
 
 > The 'initialised' branch holds the test suite. It should give a good overview.
-
 <br>
+
 ## Okay, how do I keep this example?
 
 You can simply fork this repository on github or create an empty repository on your own git server. Then you must do steps in "Give it a try!" section and change the remote-url to the one of your create repository and push to your empty repository.
@@ -117,13 +117,12 @@ You can simply fork this repository on github or create an empty repository on y
 git remote set-url origin $URL
 git push -u origin master
 ```
-
 <br>
+
 ## How to maintain croni?
 
 Croni automatically updates the jobs repository as long as croni_run is "true".
 > Any local changes will be stashed in order to fulfill the update - nothing is lost!
-
 
 Furthermore, you can use following commands to maintain croni:
 ```
@@ -150,8 +149,8 @@ An alias in ~/.bashrc à la:
 alias croni="[PATH_JOBS_REPO]/croni.sh $@"
 ```
 might be useful to execute jobs from any directory.
-
 <br>
+
 ## What's next?
 
 Basically, it's a hacky prototype. It would be interesting to (re)write croni properly in python to build a basis to go towards a "mature" CI server,
