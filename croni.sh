@@ -31,6 +31,7 @@ init () {
 			# https://git.boddenberg.it/croni
 
 			croni_run=true
+			croni_update=false
 			croni_sendmail=false
 		EOT
 	fi
@@ -52,9 +53,11 @@ deploy () {
 	old_crontab="$base/.cronitab"
 	new_crontab="$base/.cronitab_new"
 
-	# create job unrelated cronjobs to update and ensure HTTPS server is listening
-	echo "$croni_update_expression $croni update" > $new_crontab
-	echo "@reboot $croni start_server" >> $new_crontab
+	# create job-unrelated cronjobs to update and ensure HTTP server is listening
+	echo "@reboot $croni start_server" > $new_crontab
+	if [ "$croni_update" = "true" ]; then
+		echo "$croni_update_expression $croni update" >> $new_crontab
+	fi
 	if [ "$croni_server_check_expression" != "" ]; then
 		echo "$croni_server_check_expression $croni start_server" >> $new_crontab
 	fi
