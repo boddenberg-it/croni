@@ -58,7 +58,7 @@ deploy () {
 
 	# create job-unrelated cronjobs to update and ensure HTTP server is listening
 	echo "@reboot $croni start_server" > $new_crontab
-	if [ "$croni_update" = "true" ]; then
+	if [ $croni_update ]; then
 		echo "$croni_update_expression $croni update" >> $new_crontab
 	fi
 	if [ "$croni_server_check_expression" != "" ]; then
@@ -243,7 +243,7 @@ run () {
 				result="FAIL"
 			fi
 		fi
-		if [ "$croni_send_mail" = "true" ]; then
+		if [ $croni_send_mail ]; then
 			rcpt="$(job_value "$project" "$job_file" "$croni_mail_recipients")"
 			sendmail -t "$rcpt" -u "[croni] build $project/$job $result $parsed_reason" -a "$job_log"
 		fi
@@ -473,5 +473,9 @@ runtime="$webroot/logs/.runtime/"
 export base submodule_base webroot templates runtime
 
 . "$base/croni.cfg"
-. "$HOME/.croni" > /dev/null 2>&1 || true
+
+if [ "$1" != "init" ]; then
+	. "$HOME/.croni" > /dev/null 2>&1 || true
+fi
+
 $@
