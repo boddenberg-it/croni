@@ -9,25 +9,25 @@ Basically, croni adds a front end to cron for better overview and forces one to 
 
 List of functionalities/requirements:
 
-⋅⋅* separate workspaces for each build
-⋅⋅* declaring global/job-specific timeout
-⋅⋅* declaring global/job-specific log failure message depending on exit code
+* separate workspaces for each build
+* declaring global/job-specific timeout
+* declaring global/job-specific log failure message depending on exit code
 
-⋅⋅* timeline, log and workspace rotation of jobs (gc)
-⋅⋅* everything lives in repo to share easily within teams
-⋅⋅* provide update automation for jobs repository
-⋅⋅* provide manual croni update
+* timeline, log and workspace rotation of jobs (gc)
+* everything lives in repo to share easily within teams
+* provide update automation for jobs repository
+* provide manual croni update
 
-⋅⋅* expose build information on local HTTP server
-⋅⋅* static web pages
-⋅⋅* show console log for each job run in pop up window
-⋅⋅* show croni.log in pop up window
-⋅⋅* expose job workspaces
+* expose build information on local HTTP server
+* static web pages
+* show console log for each job run in pop up window
+* show croni.log in pop up window
+* expose job workspaces
 
 Dependencies:
 
-⋅⋅* shell (timeout command must be available)
-⋅⋅* python < 3 (for HTTP server only)
+* shell (timeout command must be available)
+* python < 3 (for HTTP server only)
 
 
 ### Give it a try!
@@ -60,70 +60,18 @@ default_croni_mail_recipients="croni@boddenberg.it"
 default_croni_reason_87="This is the global (croni.cfg) reason message for exit code 87"
 ```
 
-as well as all jobs in their project folder before init.sh call,
+as well as all init.sh and the jobs folder.
 ```
 .
-├── croni
+├── croni  # git submodule
 ├── croni.cfg
 ├── init.sh
 ├── jobs
 │   └── hello_project
 │       └── hello_world.sh
-└── README
+└── README.md
 ```
 
-and afterwards:
-
-```
-.
-├── croni
-│   ├── croni.sh
-│   ├── README.md
-│   └── webroot
-│       ├── css
-│       │   ├── bootstrap.min.css
-│       │   ├── croni.css
-│       │   └── ie10-viewport-bug-workaround.css
-│       ├── hello_project-hello_world.html
-│       ├── hello_project.html
-│       ├── index.html
-│       ├── js
-│       │   ├── bootstrap.min.js
-│       │   ├── html5shiv.min.js
-│       │   ├── ie10-viewport-bug-workaround.js
-│       │   ├── jquery.min.js
-│       │   └── respond.min.js
-│       ├── logs
-│       │   ├── croni.log
-│       │   ├── hello_project
-│       │   │   ├── hello_world
-│       │   │   │   ├── hello_world_0.log
-│       │   │   │   ├── hello_world_1.log
-│       │   │   │   ├── hello_world_2.log
-│       │   │   │   ├── latest_build_number
-│       │   │   │   └── workspaces
-│       │   │   │       ├── 0
-│       │   │   │       │   └── hello
-│       │   │   │       │       └── world
-│       │   │   │       ├── 1
-│       │   │   │       │   └── hello
-│       │   │   │       │       └── world
-│       │   │   │       └── 2
-│       │   │   │           └── hello
-│       │   │   │               └── world
-│       │   │   └── hello_world.last_build
-│       │   └── server.log
-│       └── templates.html
-├── croni.cfg
-├── croni.sh -> /home/blobb/develop/test_croni/croni-test/croni/croni.sh
-├── index.html -> /home/blobb/develop/test_croni/croni-test/croni/webroot/index.html
-├── init.sh
-├── jobs
-│   └── hello_project
-│       └── hello_world.sh
-├── logs -> /home/blobb/develop/test_croni/croni-test/croni/webroot/logs/
-└── README
-```
 
 A job can be any executable file, which declares following parameters in code or comment.
 ```
@@ -134,6 +82,16 @@ echo
 echo "Hello world!"
 mkdir hello
 touch hello/world
+```
+
+Here is an example with all available job parameters.
+
+```
+#!/bin/sh
+
+croni="0 * * * *"
+
+do_magic
 ```
 
 Additionally, you can create a 'scripts' or any other folder next to jobs and call them as follows
@@ -163,6 +121,7 @@ Note: any local changes will be stashed in order to fulfill the update - nothing
 
 Furthermore, you can use following commands to maintain croni:
 
+```
 # deploys local $base/jobs directory
 ./croni.sh deploy
 
@@ -178,12 +137,12 @@ Furthermore, you can use following commands to maintain croni:
 ./croni.sh run $project $jobfile
 # runs although croni_run is "false" in croni.cfg
 ./croni.sh test $project $jobfile
+```
 
-
-an alias in ~/.bashrc à la:
-
+An alias in ~/.bashrc à la:
+```
 alias croni="[PATH_JOBS_REPO]/croni.sh $@"
-
+```
 might be helpful to execute jobs from any directory.
 
 
