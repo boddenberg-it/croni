@@ -1,25 +1,24 @@
-### Why?
+## Why?
 
 Croni shall help persons and small teams, who are having the need for a CI server, which at least runs daily/hourly. But don't want to setup and maintain a fully blown CI setup like Jenkins, Travis CI, Bamboo, et cetera.
 
 
-### What functionalities does croni provide?
+## What functionalities does croni provide?
 
 Basically, croni adds a front end to cron for better overview and forces one to put each cronjob in a repository.
 
 List of functionalities/requirements:
 
 * separate workspaces for each build
-* declaring global/job-specific timeout
-* declaring global/job-specific log failure message depending on exit code
-
+* sendmail for failed builds
+* declaring global/job-specific timeout, recipients and failure message depending on exit code
+<br>
 * timeline, log and workspace rotation of jobs (gc)
 * everything lives in repo to share easily within teams
 * provide update automation for jobs repository
 * provide manual croni update
-
-* expose build information on local HTTP server
-* static web pages
+<br>
+* expose build information on local HTTP server (static web pages)
 * show console log for each job run in pop up window
 * show croni.log in pop up window
 * expose job workspaces
@@ -30,7 +29,7 @@ Dependencies:
 * python < 3 (for HTTP server only)
 
 
-### Give it a try!
+## Give it a try!
 ```
 git clone https://github.com/boddenberg-it/croni-test
 cd croni-test
@@ -102,10 +101,10 @@ croni="0 * * * * "
 $base/scripts/example_script.sh "foo" "bar"
 ```
 
-Note: the 'initialised' branch holds the test suite. It should give a good overview.
+> The 'initialised' branch holds the test suite. It should give a good overview.
 
 
-### Okay, how do I keep this example?
+## Okay, how do I keep this example?
 
 You can simply fork this repository on github or create an empty repository on your own git server. Then you must do steps in "Give it a try!" section and change the remote-url to the one of your create repository and push to your empty repository.
 
@@ -117,10 +116,10 @@ git push -u origin master
 ## How to maintain croni?
 
 Croni automatically updates the jobs repository as long as croni_run is "true".
-Note: any local changes will be stashed in order to fulfill the update - nothing is lost!
+> Any local changes will be stashed in order to fulfill the update - nothing is lost!
+
 
 Furthermore, you can use following commands to maintain croni:
-
 ```
 # deploys local $base/jobs directory
 ./croni.sh deploy
@@ -135,6 +134,7 @@ Furthermore, you can use following commands to maintain croni:
 ./croni.sh start_server
 
 ./croni.sh run $project $jobfile
+
 # runs although croni_run is "false" in croni.cfg
 ./croni.sh test $project $jobfile
 ```
@@ -143,10 +143,10 @@ An alias in ~/.bashrc à la:
 ```
 alias croni="[PATH_JOBS_REPO]/croni.sh $@"
 ```
-might be helpful to execute jobs from any directory.
+might be useful to execute jobs from any directory.
 
 
-### What's next?
+## What's next?
 
 Basically, it's a hacky prototype. It would be interesting to (re)write croni properly in python to build a basis to go towards a "mature" CI server,
 but this depends on the feedback. Personally, it's a handy cronjob presenter and handler.
