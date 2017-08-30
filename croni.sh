@@ -473,5 +473,5 @@ runtime="$webroot/logs/.runtime/"
 export base submodule_base webroot templates runtime
 
 . "$base/croni.cfg"
-. "$HOME/.croni" > /dev/null 2&>1 || true
+. "$HOME/.croni" > /dev/null 2>&1 || true
 $@
