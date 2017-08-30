@@ -3,6 +3,15 @@
 # author: André Boddenberg
 # license: GPL 3.0
 
+init_config="
+# croni instance configuration file
+#  https://git.boddenberg.it/croni
+
+croni_run=true
+croni_update=false
+croni_sendmail=false
+"
+
 init () {
 	# creating necessary directories & symlinks
 	mkdir -p "$runtime"
@@ -26,14 +35,8 @@ init () {
 
 	# creating config file in home directory
 	if [ ! -f "$HOME/.croni" ]; then
-		cat <<-EOT > "$HOME/.croni"
-			# croni instance configuration file
-			# https://git.boddenberg.it/croni
-
-			croni_run=true
-			croni_update=false
-			croni_sendmail=false
-		EOT
+		echo "$init_config" > "$HOME/.croni"
+		. "$HOME/.croni"
 	fi
 
 	update_croni_table
@@ -236,14 +239,13 @@ run () {
 				reason="$parsed_reason"
 				echo "[INFO] Noted failure reason: $reason" >> "$job_log"
 				result="KNOWN FAIL"
-				# if croni_sendmail; sendmail
 			else
 				result="FAIL"
 			fi
 		fi
 		if [ "$croni_send_mail" = "true" ]; then
 			rcpt="$(job_value "$project" "$job_file" "$croni_mail_recipients")"
-			sendmail "$rcpt" "[croni] build $project/$job -> $result; $parsed_reason" "$(cat $job_log)"
+			sendmail -t "$rcpt" -u "[croni] build $project/$job $result $parsed_reason" -a "$job_log"
 		fi
 	else
 		result="OK"
@@ -471,5 +473,5 @@ runtime="$webroot/logs/.runtime/"
 export base submodule_base webroot templates runtime
 
 . "$base/croni.cfg"
-. "$HOME/.croni"
+. "$HOME/.croni" > /dev/null 2&>1 || true
 $@
