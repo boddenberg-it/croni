@@ -291,7 +291,7 @@ start_server () {
 	is_online="$(ps a | grep "python -m SimpleHTTPServer $croni_port" | wc -l)"
 	if [ "$is_online" = "1" ]; then
 		cd "$webroot"
-		python -m SimpleHTTPServer "$croni_port" > "$base/logs/server.log" 2>&1 &
+		python -m SimpleHTTPServer "$croni_port" >> "$base/logs/server.log" 2>&1 &
 	fi
 }
 
