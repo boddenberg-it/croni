@@ -7,9 +7,9 @@ Croni shall help persons and small teams, who are having the need for a CI serve
 
 Basically, croni adds a front end to cron for better overview and forces one to put each cronjob in a repository, which makes it easy to share, keep track of changes and deploy croni in seconds.
 
-The croni front end does not provide and interaction like triggering a build. Furthermore, it only provides information about finished builds, i.e. no informaton about running jobs.
+The croni front end does not provide any interaction like triggering a build or the like. Furthermore, it only provides information about finished builds, i.e. no informaton about running jobs.
 
-List of functionalities/requirements:
+<u>List of functionalities/requirements:</u>
 
 * separate workspaces for each build
 * declaring global/job-specific timeout, recipients and failure message depending on exit code
@@ -24,7 +24,7 @@ List of functionalities/requirements:
 * show croni.log in pop up window
 * expose job workspaces
 
-Dependencies:
+<u>Dependencies:</u>
 
 * <b>cron</b>
 * <b>shell</b>
@@ -35,7 +35,7 @@ Dependencies:
 
 > Dependencies in <b>bold</b> has to be met!
 > Python is only necessary for HTTP server and firefox can open croni's index.html locally without it.
-> croni will run fine without sendmail, it simply just doesn't send mails.
+> Croni will run fine without sendmail, it simply just doesn't send mails.
 
 <br>
 
@@ -50,29 +50,33 @@ cd croni-test
 ```
 
 Now, you should see your croni instance on [http://localhost:8080](http://localhost:8080).
-> Firefox should open the index.html locally if python is not available.
+> Firefox can open the index.html file locally.
+<br>
 
-![croni front end after init.sh call](https://boddenberg.it/github_images/croni/croni_welcome.png)
+![croni welcome page](https://boddenberg.it/github_images/croni/croni_welcome.png)
 
-The first table shows information about jobs and submodule repositories. The second table is a timeline displaying latest job runs.
+The first table shows information about jobs and submodule repositories. The second table is a build timeline.
 
-Some rows provide links:
+<u>Some rows provide links:</u>
 * duration opens workspace.
 * name opens job page.
 * build number opens console log as seen below.
 
-![croni front end after init.sh call](https://boddenberg.it/github_images/croni/croni_console_log.png)
+![croni log pop up](https://boddenberg.it/github_images/croni/croni_console_log.png)
 > Clicking 'Welcome to croni' will show croni.log in same pop up..
+<br>
 
 Each project page is linked in the navigation bar and shows a table holding latest results of jobs within project.
 
-![croni front end after init.sh call](https://boddenberg.it/github_images/croni/croni_project.png")
+![croni project page](https://boddenberg.it/github_images/croni/croni_project2.png)
+<br>
 
+## Configurations
 
-After explaining the front end let's take a look at the structure:
+After explaining the front end let's take a look at the structure of the example jobs repository:
 ```
 .
-├── croni  # git submodule
+├── croni
 ├── croni.cfg
 ├── init.sh
 ├── jobs
@@ -91,18 +95,19 @@ croni_sendmail=false
 The croni.cfg file holds following parameter:
 ```
 croni_update_expression="0 5,17 * * *"
+
 croni_port="8080"
 croni_server_check_expression="0 * * * *"
+
 croni_workspace_rotation="14"
 croni_build_rotation="28"
 
-# Note: all default_xyz parameters can be overridden by each job/script.
+# all default_xyz parameters can be overridden by job.
 default_croni_timeout="1800"
 default_croni_mail_recipients="croni@boddenberg.it"
-
-# default reasons, might be handy
 default_croni_reason_87="This is the global (croni.cfg) reason message for exit code 87"
 ```
+<br>
 
 ## How to create jobs?
 
@@ -120,7 +125,11 @@ Here is an example with all available job parameters.
 
 croni="0 * * * *"
 
-do_magic
+croni_mail_recipients="croni@boddenberg.it"
+croni_timeout="90"
+croni_reason_87="job failed with exit code 87"
+
+echo "foobar"
 ```
 
 Additionally, you can create a 'scripts' or any other folder next to jobs and call scripts within and pass arguments as follows:
@@ -133,16 +142,6 @@ $base/scripts/example_script.sh "foo" "bar"
 
 > The 'initialised' branch holds the test suite. It should give a good overview.
 
-<br>
-
-## Okay, how do I keep this example?
-
-You can simply fork this repository on github or create an empty repository on any arbitrary git server. Then you must do steps in "Give it a try!" section and change the remote-url to the one of your create repository and push.
-
-```
-git remote set-url origin $URL
-git push -u origin master
-```
 <br>
 
 ## How to maintain croni?
@@ -176,6 +175,16 @@ alias croni="[PATH_JOBS_REPO]/croni.sh $@"
 ```
 might be useful to execute jobs from any directory.
 
+<br>
+
+## Okay, how do I keep this example?
+
+You can simply fork this repository on github or create an empty repository on any arbitrary git server. Then do steps in "Give it a try!" section and change the remote-url to the one of your repository and push.
+
+```
+git remote set-url origin $URL
+git push -u origin master
+```
 <br>
 
 ## What's next?
