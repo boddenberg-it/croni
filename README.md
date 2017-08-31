@@ -5,7 +5,7 @@ Croni shall help persons and small teams, who are having the need for a CI serve
 
 ## What functionalities does croni provide?
 
-Basically, croni adds a front end to cron for better overview and forces one to put each cronjob in a repository, which makes it easy to share, keep track of changes and deploy croni in seconds.
+Basically, croni adds a bootstrap powered front end to cron for better overview and forces one to put each cronjob in a repository, which makes it easy to share, keep track of changes and deploy croni in seconds.
 
 The croni front end does not provide any interaction like triggering a build or the like. Furthermore, it only provides information about finished builds, i.e. no informaton about running jobs.
 
@@ -17,8 +17,6 @@ The croni front end does not provide any interaction like triggering a build or 
 * provide update automation for jobs repository
 * provide manual croni submodule update
 * 'sendmail' for failed builds
-<br>
-
 * expose build information on local HTTP server (static web pages)
 * show console log for each job run in pop up window
 * show croni.log in pop up window
@@ -34,7 +32,7 @@ The croni front end does not provide any interaction like triggering a build or 
   * sendmail
 
 > Dependencies in <b>bold</b> has to be met!
-> Python is only necessary for HTTP server and firefox can open croni's index.html locally without it.
+> Python is only necessary for HTTP server and firefox should open croni's index.html locally without it.
 > Croni will run fine without sendmail, it simply just doesn't send mails.
 
 <br>
@@ -50,7 +48,7 @@ cd croni-test
 ```
 
 Now, you should see your croni instance on [http://localhost:8080](http://localhost:8080).
-> Firefox can open the index.html file locally.
+> Firefox should open the index.html file locally.
 <br>
 
 ![croni welcome page](https://boddenberg.it/github_images/croni/croni_welcome.png)
@@ -63,7 +61,7 @@ The first table shows information about jobs and submodule repositories. The sec
 * build number opens console log as seen below.
 
 ![croni log pop up](https://boddenberg.it/github_images/croni/croni_console_log.png)
-> Clicking 'Welcome to croni' will show croni.log in same pop up..
+> Clicking 'welcome to croni' will show croni.log in same pop up.
 <br>
 
 Each project page is linked in the navigation bar and shows a table holding latest results of jobs within project.
@@ -85,7 +83,7 @@ After explaining the front end let's take a look at the structure of the example
 └── README.md
 ```
 
-Croni creates ~/.croni file while initialising. It is not listed above and holds following parameter:
+Btw, croni creates ~/.croni while initialising. It is not listed above and holds following parameter:
 ```
 croni_run=true
 croni_update=false
@@ -111,12 +109,13 @@ default_croni_reason_87="This is the global (croni.cfg) reason message for exit 
 
 ## How to create jobs?
 
-A job can be any executable file, which declares following parameters in code or comment.
+A job can be any executable script, which declares following parameters in code or comment.
 ```
-#!/bin/sh
+#!/usr/bin/python
+
 croni="0 * * * *"
 
-echo "Hello world!"
+print('Hello World!')
 ```
 
 Here is an example with all available job parameters.
@@ -132,14 +131,13 @@ croni_reason_87="job failed with exit code 87"
 echo "foobar"
 ```
 
-Additionally, you can create a 'scripts' or any other folder next to jobs and call scripts within and pass arguments as follows:
+Additionally, creating a folder e.g. 'scripts' will allow you to call scripts within this folder and pass arguments as follows:
 ```
 #!/bin/sh
 croni="0 * * * *"
 
 $base/scripts/example_script.sh "foo" "bar"
 ```
-
 > The 'initialised' branch holds the test suite. It should give a good overview.
 
 <br>
@@ -148,6 +146,7 @@ $base/scripts/example_script.sh "foo" "bar"
 
 Croni automatically updates the jobs repository as long as croni_run in ~/.croni is true.
 > Any local changes will be stashed in order to fulfill the update - nothing is lost!
+<br>
 
 Furthermore, you can use following commands to maintain croni:
 ```
