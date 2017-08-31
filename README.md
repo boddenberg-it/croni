@@ -144,11 +144,11 @@ $base/scripts/example_script.sh "foo" "bar"
 
 ## How to maintain croni?
 
-Croni automatically updates the jobs repository as long as croni_run in ~/.croni is true.
+Croni automatically updates the jobs repository as long as croni_update in ~/.croni is true.
 > Any local changes will be stashed in order to fulfill the update - nothing is lost!
 <br>
 
-Furthermore, you can use following commands to maintain croni:
+Furthermore, you can use following commands:
 ```
 # deploys changes
 ./croni.sh deploy
@@ -172,7 +172,7 @@ An alias in ~/.bashrc à la:
 ```
 alias croni="[PATH_JOBS_REPO]/croni.sh $@"
 ```
-might be useful to execute jobs from any directory.
+will be useful to execute croni from any directory.
 
 <br>
 
