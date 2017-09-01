@@ -64,7 +64,7 @@ The first table shows information about jobs and submodule repositories. The sec
 > Clicking 'welcome to croni' will show croni.log in same pop up.
 <br>
 
-Each project page is linked in the navigation bar and shows a table holding latest results of jobs within project.
+Each project page is linked in the navigation bar and shows a table holding latest results of jobs within the project.
 
 ![croni project page](https://boddenberg.it/github_images/croni/croni_project2.png)
 
@@ -140,7 +140,7 @@ croni="0 * * * *"
 
 $base/scripts/example_script.sh "foo" "bar"
 ```
-> The 'initialised' branch of (croni-test)[https://github.com/boddenberg-it/croni-test/tree/initialised] repository holds the test suite. It should give a good overview.
+> The 'initialised' branch of [croni-test](https://github.com/boddenberg-it/croni-test/tree/initialised) repository holds the test suite. It should give a good overview.
 
 <br>
 
@@ -180,7 +180,7 @@ will be useful to execute croni from any directory.
 
 ## Okay, how do I keep this example?
 
-You can simply fork the (croni-test)[https://github.com/boddenberg-it/croni-test/] repository on github or create an empty repository on any arbitrary git server. Then do steps in "Give it a try!" section and change the remote-url to the one of your repository and push.
+You can simply fork the [croni-test](https://github.com/boddenberg-it/croni-test/) repository on github or create an empty repository on any arbitrary git server. Then do steps in "Give it a try!" section and change the remote-url to the one of your repository and push.
 
 ```
 git remote set-url origin $URL
