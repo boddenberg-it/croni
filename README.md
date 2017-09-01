@@ -7,7 +7,7 @@ Croni shall help persons and small teams, who are having the need for a CI serve
 
 Basically, croni adds a bootstrap powered front end to cron for better overview and forces one to put each cronjob in a repository, which makes it easy to share, keep track of changes and deploy croni in seconds.
 
-The croni front end does not provide any interaction like triggering a build or the like. Furthermore, it only provides information about finished builds, i.e. no informaton about running jobs.
+The croni front end does not provide any interaction like triggering a build or the like. Furthermore, it only provides information about finished builds, i.e. no informaton about running jobs are shown.
 
 <u>List of functionalities/requirements:</u>
 
@@ -32,7 +32,7 @@ The croni front end does not provide any interaction like triggering a build or 
   * sendmail
 
 > Dependencies in <b>bold</b> has to be met!
-> Python is only necessary for HTTP server and firefox should open croni's index.html locally without it.
+> Python is only necessary for HTTP server and firefox opens croni's index.html locally without one.
 > Croni will run fine without sendmail, it simply just doesn't send mails.
 
 <br>
@@ -67,6 +67,8 @@ The first table shows information about jobs and submodule repositories. The sec
 Each project page is linked in the navigation bar and shows a table holding latest results of jobs within project.
 
 ![croni project page](https://boddenberg.it/github_images/croni/croni_project2.png)
+
+Each job page holds a job-specific timeline similar to timelines above.
 <br>
 
 ## Configurations
@@ -138,7 +140,7 @@ croni="0 * * * *"
 
 $base/scripts/example_script.sh "foo" "bar"
 ```
-> The 'initialised' branch holds the test suite. It should give a good overview.
+> The 'initialised' branch of (croni-test)[https://github.com/boddenberg-it/croni-test/tree/initialised] repository holds the test suite. It should give a good overview.
 
 <br>
 
@@ -168,7 +170,7 @@ Furthermore, you can use following commands:
 ./croni.sh test $project $jobfile
 ```
 
-An alias in ~/.bashrc à la:
+Moreover, an alias in ~/.bashrc à la:
 ```
 alias croni="[PATH_JOBS_REPO]/croni.sh $@"
 ```
@@ -178,12 +180,14 @@ will be useful to execute croni from any directory.
 
 ## Okay, how do I keep this example?
 
-You can simply fork this repository on github or create an empty repository on any arbitrary git server. Then do steps in "Give it a try!" section and change the remote-url to the one of your repository and push.
+You can simply fork the (croni-test)[https://github.com/boddenberg-it/croni-test/] repository on github or create an empty repository on any arbitrary git server. Then do steps in "Give it a try!" section and change the remote-url to the one of your repository and push.
 
 ```
 git remote set-url origin $URL
 git push -u origin master
 ```
+
+Congratulations, you have just created your croni CI setup!
 <br>
 
 ## What's next?
