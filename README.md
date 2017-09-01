@@ -1,6 +1,6 @@
 ## Why?
 
-Croni shall help persons and small teams, who are having the need for a CI server, which at least runs daily/hourly. But don't want to setup and maintain a fully blown CI setup like Jenkins, Bamboo, et cetera.
+Croni shall help persons and small teams, who are having the need for a build server, which at least runs daily/hourly. But don't want to setup and maintain a fully blown build setup like Jenkins, Bamboo, et cetera.
 <br>
 
 ## What functionalities does croni provide?
@@ -187,9 +187,9 @@ git remote set-url origin $URL
 git push -u origin master
 ```
 
-Congratulations, you have just created your croni CI setup!
+Congratulations, you have just created your croni build server!
 <br>
 
 ## What's next?
 
-Basically, it's a hacky prototype. It would be interesting to (re)write croni properly in python to build a basis to go towards a "mature" CI server, but this depends on the feedback. Personally, it's a handy cronjob presenter and handler.
+Basically, it's a hacky prototype. It would be interesting to (re)write croni properly in python to build a basis to go towards a "mature" build server, but this depends on the feedback. Personally, it's a handy cronjob presenter and handler.
