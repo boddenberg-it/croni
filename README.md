@@ -51,7 +51,7 @@ Now, you should see your croni instance on [http://localhost:8080](http://localh
 > Firefox should open the index.html file locally.
 <br>
 
-![croni welcome page](https://boddenberg.it/github_images/croni/croni_welcome.png)
+![croni welcome page](https://boddenberg.it/croni/croni_welcome_page.png)
 
 The first table shows information about jobs and submodule repositories. The second table is a build timeline.
 
@@ -60,13 +60,13 @@ The first table shows information about jobs and submodule repositories. The sec
 * name opens job page.
 * build number opens console log as seen below.
 
-![croni log pop up](https://boddenberg.it/github_images/croni/croni_console_log.png)
+![croni log pop up](https://boddenberg.it/croni/croni_log_popup.png)
 > Clicking 'welcome to croni' will show croni.log in same pop up.
 <br>
 
 Each project page is linked in the navigation bar and shows a table holding latest results of jobs within the project.
 
-![croni project page](https://boddenberg.it/github_images/croni/croni_project2.png)
+![croni project page](https://boddenberg.it/croni/croni_project_page.png)
 
 Each job page holds a job-specific timeline similar to timelines above.
 <br>
